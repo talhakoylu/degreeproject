@@ -22,6 +22,8 @@ const theme = extendTheme({
             space_cadet: {
                 500: '#2E294E',
                 900: '#1F1750',
+                wOpacity06: 'rgba(31,23,80, 0.6)',
+                wOpacity08: 'rgba(31,23,80, 0.8)',
             },
             persian_green: {
                 500: '#1B998B',
@@ -33,12 +35,19 @@ const theme = extendTheme({
             yellow_orange_color_wheel: '#F8961E',
             maize_crayola: '#F9C74F',
             pistachio: '#90BE6D',
-            zomp: '#43AA8B',
+            zomp: {
+                500: '#43AA8B',
+            },
             queen_blue: {
                 500: '#577590',
                 900: '#2E608C',
-                wOpacity04: 'rgba(87,117,144, 0.4)'
+                wOpacity04: 'rgba(87,117,144, 0.4)',
+                wOpacity08: 'rgba(87,117,144, 0.8)',
             },
+            purpleGradientBackground: {
+                normal: 'linear-gradient(0deg, rgba(50,4,253,0.7455357142857143) 0%, rgba(153,7,250,0.5) 100%)',
+                hover: 'linear-gradient(0deg, rgba(36,0,195,0.7987570028011204) 0%, rgba(113,5,185,0.7763480392156863) 100%)'
+            }
         }
     }
 });

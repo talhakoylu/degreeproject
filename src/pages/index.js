@@ -19,7 +19,11 @@ import SwiperCore, {
 import {Swiper, SwiperSlide} from "swiper/react";
 import {MdNavigateBefore, MdNavigateNext} from "react-icons/md";
 import {useRouter} from "next/router";
-import StandartLayout from "../components/layouts/StandartLayout";
+import StandardLayout from "../components/layouts/StandardLayout";
+import ContainerArea from "../components/ContainerArea";
+import PickedQuizzesForYou from "../components/quiz_components/PickedQuizzesForYou";
+import Categories from "../components/category_components/Categories";
+import LastAddedQuizzes from "../components/quiz_components/LastAddedQuizzes";
 
 
 SwiperCore.use([Pagination, Navigation]);
@@ -40,328 +44,94 @@ export default function Home() {
             </Head>
 
 
+            <StandardLayout>
 
-            <StandartLayout>
-                <Container maxW={"container.xl"}>
-                    <HStack justify={"space-between"} align={"center"} mt={6} mb={2}>
-                        <Box borderLeft={"4px"} borderColor={"specialColors.portland_orange.500"} paddingLeft={2}>
-                            <Text fontSize='2xl' fontWeight={"semibold"}>Bunları Sizin İçin Seçtik</Text>
-                        </Box>
+                <VStack spacing={4}>
+                    <PickedQuizzesForYou/>
+                    <Categories/>
+                    <LastAddedQuizzes/>
+                    {/*<Container maxW={"container.xl"} mt={8}>*/}
+                    {/*    <Box borderLeft={"4px"} borderColor={"specialColors.portland_orange.500"} paddingLeft={2} mb={6}>*/}
+                    {/*        <Text fontSize='2xl' fontWeight={"semibold"}>En Son Eklenenler</Text>*/}
+                    {/*    </Box>*/}
+                    {/*    <SimpleGrid columns={3} spacingX='40px' spacingY='40px'>*/}
 
-                        <HStack spacing={4}>
-                            <IconButton aria-label='Previous Slide' colorScheme={"specialColors.portland_orange"}
-                                        fontSize={"2rem"} ref={prevRefBoard} icon={<MdNavigateBefore/>}/>
+                    {/*        <Box bg={"white"} boxShadow={"2xl"} minHeight={400} w={"100%"}*/}
+                    {/*             rounded={"md"} overflow={"hidden"}>*/}
 
-                            <IconButton aria-label='Previous Slide' colorScheme={"specialColors.portland_orange"}
-                                        fontSize={"2rem"} ref={nextRefBoard} icon={<MdNavigateNext/>}/>
-                        </HStack>
-                    </HStack>
+                    {/*            <Image src={"/assets/images/1.jpg"} width={"full"} height={220}*/}
+                    {/*                   objectFit={"cover"}></Image>*/}
 
-                    <Box width={"100%"}>
-                        <Swiper slidesPerView={2} spaceBetween={36}
-                                onInit={(swiper) => {
-                                    swiper.params.navigation.prevEl = prevRefBoard.current;
-                                    swiper.params.navigation.nextEl = nextRefBoard.current;
-                                    swiper.navigation.init();
-                                    swiper.navigation.update();
-                                }}
-                        >
-                            <SwiperSlide>
-                                <Box bg={"white"} boxShadow={"md"} minHeight={400} w={"100%"}
-                                     rounded={"md"} overflow={"hidden"}>
+                    {/*            <VStack align={"start"} my={3} px={4} spacing={4}>*/}
+                    {/*                <Text fontSize='2xl' fontWeight={"semibold"} lineHeight={"1.6rem"}>Header OneHeader*/}
+                    {/*                    OneHeader OneHeader OneHeader OneHeader One</Text>*/}
 
-                                    <Image src={"/assets/images/1.jpg"} width={"full"} height={220}
-                                           objectFit={"cover"}></Image>
+                    {/*                <Text textAlign={"justify"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.*/}
+                    {/*                    Praesent et lectus tortor. Nulla quam ipsum, aliquet commodo tellus ac,*/}
+                    {/*                    ultricies condimentum leo.</Text>*/}
 
-                                    <VStack align={"start"} my={3} px={4} spacing={4}>
-                                        <Text fontSize='2xl' fontWeight={"semibold"} lineHeight={"1.6rem"}>Header OneHeader
-                                            OneHeader OneHeader OneHeader OneHeader One</Text>
+                    {/*                <Button width={"full"}>Teste Git</Button>*/}
+                    {/*            </VStack>*/}
+                    {/*        </Box>*/}
 
-                                        <Text textAlign={"justify"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                            Praesent et lectus tortor. Nulla quam ipsum, aliquet commodo tellus ac,
-                                            ultricies condimentum leo.</Text>
+                    {/*        <Box bg={"white"} boxShadow={"2xl"} minHeight={400} w={"100%"}*/}
+                    {/*             rounded={"md"} overflow={"hidden"}>*/}
 
-                                        <Button width={"full"}>Teste Git</Button>
-                                    </VStack>
-                                </Box>
-                            </SwiperSlide>
+                    {/*            <Image src={"/assets/images/3.jpg"} width={"full"} height={220}*/}
+                    {/*                   objectFit={"cover"}></Image>*/}
 
-                            <SwiperSlide>
-                                <Box bg={"white"} boxShadow={"md"} minHeight={400} w={'100%'}
-                                     rounded={"md"} overflow={"hidden"}>
-                                    <Image src={"/assets/images/2.jpg"} width={"full"} height={220}
-                                           objectFit={"cover"}></Image>
+                    {/*            <VStack align={"start"} my={3} px={4} spacing={4}>*/}
+                    {/*                <Text fontSize='2xl' fontWeight={"semibold"} lineHeight={"1.6rem"}>Header OneHeader*/}
+                    {/*                    OneHeader OneHeader OneHeader OneHeader One</Text>*/}
 
-                                    <VStack align={"start"} my={3} px={4} spacing={4}>
-                                        <Text fontSize='2xl' as='b' lineHeight={"1.6rem"}>Header OneHeader OneHeader
-                                            OneHeader OneHeader OneHeader One</Text>
+                    {/*                <Text textAlign={"justify"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.*/}
+                    {/*                    Praesent et lectus tortor. Nulla quam ipsum, aliquet commodo tellus ac,*/}
+                    {/*                    ultricies condimentum leo.</Text>*/}
 
-                                        <Text textAlign={"justify"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                            Praesent et lectus tortor. Nulla quam ipsum, aliquet commodo tellus ac,
-                                            ultricies condimentum leo.</Text>
+                    {/*                <Button width={"full"}>Teste Git</Button>*/}
+                    {/*            </VStack>*/}
+                    {/*        </Box>*/}
 
-                                        <Button width={"full"}>Teste Git</Button>
-                                    </VStack>
-                                </Box>
-                            </SwiperSlide>
+                    {/*        <Box bg={"white"} boxShadow={"2xl"} minHeight={400} w={"100%"}*/}
+                    {/*             rounded={"md"} overflow={"hidden"}>*/}
 
-                            <SwiperSlide>
-                                <Box bg={"white"} boxShadow={"md"} minHeight={400} w={'100%'}
-                                     rounded={"md"} overflow={"hidden"}>
-                                    <Image src={"/assets/images/3.jpg"} width={"full"} height={220}
-                                           objectFit={"cover"}></Image>
+                    {/*            <Image src={"/assets/images/2.jpg"} width={"full"} height={220}*/}
+                    {/*                   objectFit={"cover"}></Image>*/}
 
-                                    <VStack align={"start"} my={3} px={4} spacing={4}>
-                                        <Text fontSize='2xl' as='b' lineHeight={"1.6rem"}>Header OneHeader OneHeader
-                                            OneHeader OneHeader OneHeader One</Text>
+                    {/*            <VStack align={"start"} my={3} px={4} spacing={4}>*/}
+                    {/*                <Text fontSize='2xl' fontWeight={"semibold"} lineHeight={"1.6rem"}>Header OneHeader*/}
+                    {/*                    OneHeader OneHeader OneHeader OneHeader One</Text>*/}
 
-                                        <Text textAlign={"justify"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                            Praesent et lectus tortor. Nulla quam ipsum, aliquet commodo tellus ac,
-                                            ultricies condimentum leo.</Text>
+                    {/*                <Text textAlign={"justify"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.*/}
+                    {/*                    Praesent et lectus tortor. Nulla quam ipsum, aliquet commodo tellus ac,*/}
+                    {/*                    ultricies condimentum leo.</Text>*/}
 
-                                        <Button width={"full"}>Teste Git</Button>
-                                    </VStack>
-                                </Box>
-                            </SwiperSlide>
+                    {/*                <Button width={"full"}>Teste Git</Button>*/}
+                    {/*            </VStack>*/}
+                    {/*        </Box>*/}
 
-                            <SwiperSlide>
-                                <Box bg={"white"} boxShadow={"md"} minHeight={240} w={'100%'} color='white'
-                                     rounded={"md"}>
-                                    <Image src={"/assets/images/3.jpg"} width={"full"} height={120}
-                                           objectFit={"cover"}></Image>
-                                    This is the Box
-                                </Box>
-                            </SwiperSlide>
+                    {/*        <Box bg={"white"} boxShadow={"2xl"} minHeight={400} w={"100%"}*/}
+                    {/*             rounded={"md"} overflow={"hidden"}>*/}
 
-                            <SwiperSlide>
-                                <Box bg={"white"} boxShadow={"md"} minHeight={240} w={'100%'} color='white'
-                                     rounded={"md"}>
-                                    <Image src={"/assets/images/3.jpg"} width={"full"} height={120}
-                                           objectFit={"cover"}></Image>
-                                    This is the Box
-                                </Box>
-                            </SwiperSlide>
-                        </Swiper>
-                    </Box>
-                </Container>
+                    {/*            <Image src={"/assets/images/2.jpg"} width={"full"} height={220}*/}
+                    {/*                   objectFit={"cover"}></Image>*/}
 
-                <Container maxW={"container.xl"}>
-                    <HStack justify={"space-between"} align={"center"} mt={6} mb={2}>
-                        <Box borderLeft={"4px"} borderColor={"specialColors.portland_orange.500"} paddingLeft={2}>
-                            <Text fontSize='2xl' fontWeight={"semibold"}>Kategoriler</Text>
-                        </Box>
-                        <HStack spacing={4}>
-                            <IconButton aria-label='Previous Slide' colorScheme={"specialColors.portland_orange"}
-                                        fontSize={"2rem"} ref={prevRefCategories} icon={<MdNavigateBefore/>}/>
-                            <IconButton aria-label='Previous Slide' colorScheme={"specialColors.portland_orange"}
-                                        fontSize={"2rem"} ref={nextRefCategories} icon={<MdNavigateNext/>}/>
-                        </HStack>
-                    </HStack>
+                    {/*            <VStack align={"start"} my={3} px={4} spacing={4}>*/}
+                    {/*                <Text fontSize='2xl' fontWeight={"semibold"} lineHeight={"1.6rem"}>Header OneHeader*/}
+                    {/*                    OneHeader OneHeader OneHeader OneHeader One</Text>*/}
 
-                    <Swiper slidesPerView={5} spaceBetween={36} slidesPerColumn={2} slidesPerColumnFill={'row'}
-                            onInit={(swiper) => {
-                                swiper.params.navigation.prevEl = prevRefCategories.current;
-                                swiper.params.navigation.nextEl = nextRefCategories.current;
-                                swiper.navigation.init();
-                                swiper.navigation.update();
-                            }}
-                    >
-                        <SwiperSlide>
-                            <Box
-                                background={"linear-gradient(to top, #3204fdba, #9907facc), url(/assets/images/1.jpg) no-repeat"}
-                                backgroundSize={"cover"} boxShadow={"md"} h={100} w={"100%"}
-                                rounded={"md"} overflow={"hidden"} display={"flex"} alignItems={"center"}
-                                justifyContent={"center"}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} p={3} color={"white"}> Kategori</Text>
-                            </Box>
-                        </SwiperSlide>
+                    {/*                <Text textAlign={"justify"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.*/}
+                    {/*                    Praesent et lectus tortor. Nulla quam ipsum, aliquet commodo tellus ac,*/}
+                    {/*                    ultricies condimentum leo.</Text>*/}
 
-                        <SwiperSlide>
-                            <Box
-                                background={"linear-gradient(to top, #3204fdba, #9907facc), url(/assets/images/2.jpg) no-repeat"}
-                                backgroundSize={"cover"} boxShadow={"md"} h={100} w={"100%"}
-                                rounded={"md"} overflow={"hidden"} display={"flex"} alignItems={"center"}
-                                justifyContent={"center"}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} p={3} color={"white"}> Kategori</Text>
-                            </Box>
-                        </SwiperSlide>
+                    {/*                <Button width={"full"}>Teste Git</Button>*/}
+                    {/*            </VStack>*/}
+                    {/*        </Box>*/}
+                    {/*    </SimpleGrid>*/}
+                    {/*</Container>*/}
+                </VStack>
 
-                        <SwiperSlide>
-                            <Box
-                                background={"linear-gradient(to top, #3204fdba, #9907facc), url(/assets/images/3.jpg) no-repeat"}
-                                backgroundSize={"cover"} boxShadow={"md"} h={100} w={"100%"}
-                                rounded={"md"} overflow={"hidden"} display={"flex"} alignItems={"center"}
-                                justifyContent={"center"}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} p={3} color={"white"}> Kategori</Text>
-                            </Box>
-                        </SwiperSlide>
-
-                        <SwiperSlide>
-                            <Box
-                                background={"linear-gradient(to top, #3204fdba, #9907facc), url(/assets/images/1.jpg) no-repeat"}
-                                backgroundSize={"cover"} boxShadow={"md"} h={100} w={"100%"}
-                                rounded={"md"} overflow={"hidden"} display={"flex"} alignItems={"center"}
-                                justifyContent={"center"}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} p={3} color={"white"}> Kategori</Text>
-                            </Box>
-                        </SwiperSlide>
-
-                        <SwiperSlide>
-                            <Box
-                                background={"linear-gradient(to top, #3204fdba, #9907facc), url(/assets/images/2.jpg) no-repeat"}
-                                backgroundSize={"cover"} boxShadow={"md"} h={100} w={"100%"}
-                                rounded={"md"} overflow={"hidden"} display={"flex"} alignItems={"center"}
-                                justifyContent={"center"}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} p={3} color={"white"}> Kategori</Text>
-                            </Box>
-                        </SwiperSlide>
-
-                        <SwiperSlide>
-                            <Box
-                                background={"linear-gradient(to top, #3204fdba, #9907facc), url(/assets/images/3.jpg) no-repeat"}
-                                backgroundSize={"cover"} boxShadow={"md"} h={100} w={"100%"}
-                                rounded={"md"} overflow={"hidden"} display={"flex"} alignItems={"center"}
-                                justifyContent={"center"}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} p={3} color={"white"}>Kategori</Text>
-                            </Box>
-                        </SwiperSlide>
-
-                        <SwiperSlide>
-                            <Box
-                                background={"linear-gradient(to top, #3204fdba, #9907facc), url(/assets/images/1.jpg) no-repeat"}
-                                backgroundSize={"cover"} boxShadow={"md"} h={100} w={"100%"}
-                                rounded={"md"} overflow={"hidden"} display={"flex"} alignItems={"center"}
-                                justifyContent={"center"}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} p={3} color={"white"}> Kategori</Text>
-                            </Box>
-                        </SwiperSlide>
-
-                        <SwiperSlide>
-                            <Box
-                                background={"linear-gradient(to top, #3204fdba, #9907facc), url(/assets/images/1.jpg) no-repeat"}
-                                backgroundSize={"cover"} boxShadow={"md"} h={100} w={"100%"}
-                                rounded={"md"} overflow={"hidden"} display={"flex"} alignItems={"center"}
-                                justifyContent={"center"}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} p={3} color={"white"}> Kategori</Text>
-                            </Box>
-                        </SwiperSlide>
-
-                        <SwiperSlide>
-                            <Box
-                                background={"linear-gradient(to top, #3204fdba, #9907facc), url(/assets/images/1.jpg) no-repeat"}
-                                backgroundSize={"cover"} boxShadow={"md"} h={100} w={"100%"}
-                                rounded={"md"} overflow={"hidden"} display={"flex"} alignItems={"center"}
-                                justifyContent={"center"}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} p={3} color={"white"}> Kategori</Text>
-                            </Box>
-                        </SwiperSlide>
-
-                        <SwiperSlide>
-                            <Box
-                                background={"linear-gradient(to top, #3204fdba, #9907facc), url(/assets/images/1.jpg) no-repeat"}
-                                backgroundSize={"cover"} boxShadow={"md"} h={100} w={"100%"}
-                                rounded={"md"} overflow={"hidden"} display={"flex"} alignItems={"center"}
-                                justifyContent={"center"}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} p={3} color={"white"}> Kategori</Text>
-                            </Box>
-                        </SwiperSlide>
-
-                        <SwiperSlide>
-                            <Box
-                                background={"linear-gradient(to top, #3204fdba, #9907facc), url(/assets/images/1.jpg) no-repeat"}
-                                backgroundSize={"cover"} boxShadow={"md"} h={100} w={"100%"}
-                                rounded={"md"} overflow={"hidden"} display={"flex"} alignItems={"center"}
-                                justifyContent={"center"}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} p={3} color={"white"}> Kategori</Text>
-                            </Box>
-                        </SwiperSlide>
-
-
-                    </Swiper>
-
-                </Container>
-
-                <Container maxW={"container.xl"} mt={8}>
-                    <Box borderLeft={"4px"} borderColor={"specialColors.portland_orange.500"} paddingLeft={2} mb={6}>
-                        <Text fontSize='2xl' fontWeight={"semibold"}>En Son Eklenenler</Text>
-                    </Box>
-                    <SimpleGrid columns={3} spacingX='40px' spacingY='40px'>
-
-                        <Box bg={"white"} boxShadow={"2xl"} minHeight={400} w={"100%"}
-                             rounded={"md"} overflow={"hidden"}>
-
-                            <Image src={"/assets/images/1.jpg"} width={"full"} height={220}
-                                   objectFit={"cover"}></Image>
-
-                            <VStack align={"start"} my={3} px={4} spacing={4}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} lineHeight={"1.6rem"}>Header OneHeader
-                                    OneHeader OneHeader OneHeader OneHeader One</Text>
-
-                                <Text textAlign={"justify"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                    Praesent et lectus tortor. Nulla quam ipsum, aliquet commodo tellus ac,
-                                    ultricies condimentum leo.</Text>
-
-                                <Button width={"full"}>Teste Git</Button>
-                            </VStack>
-                        </Box>
-
-                        <Box bg={"white"} boxShadow={"2xl"} minHeight={400} w={"100%"}
-                             rounded={"md"} overflow={"hidden"}>
-
-                            <Image src={"/assets/images/3.jpg"} width={"full"} height={220}
-                                   objectFit={"cover"}></Image>
-
-                            <VStack align={"start"} my={3} px={4} spacing={4}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} lineHeight={"1.6rem"}>Header OneHeader
-                                    OneHeader OneHeader OneHeader OneHeader One</Text>
-
-                                <Text textAlign={"justify"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                    Praesent et lectus tortor. Nulla quam ipsum, aliquet commodo tellus ac,
-                                    ultricies condimentum leo.</Text>
-
-                                <Button width={"full"}>Teste Git</Button>
-                            </VStack>
-                        </Box>
-
-                        <Box bg={"white"} boxShadow={"2xl"} minHeight={400} w={"100%"}
-                             rounded={"md"} overflow={"hidden"}>
-
-                            <Image src={"/assets/images/2.jpg"} width={"full"} height={220}
-                                   objectFit={"cover"}></Image>
-
-                            <VStack align={"start"} my={3} px={4} spacing={4}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} lineHeight={"1.6rem"}>Header OneHeader
-                                    OneHeader OneHeader OneHeader OneHeader One</Text>
-
-                                <Text textAlign={"justify"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                    Praesent et lectus tortor. Nulla quam ipsum, aliquet commodo tellus ac,
-                                    ultricies condimentum leo.</Text>
-
-                                <Button width={"full"}>Teste Git</Button>
-                            </VStack>
-                        </Box>
-
-                        <Box bg={"white"} boxShadow={"2xl"} minHeight={400} w={"100%"}
-                             rounded={"md"} overflow={"hidden"}>
-
-                            <Image src={"/assets/images/2.jpg"} width={"full"} height={220}
-                                   objectFit={"cover"}></Image>
-
-                            <VStack align={"start"} my={3} px={4} spacing={4}>
-                                <Text fontSize='2xl' fontWeight={"semibold"} lineHeight={"1.6rem"}>Header OneHeader
-                                    OneHeader OneHeader OneHeader OneHeader One</Text>
-
-                                <Text textAlign={"justify"}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                    Praesent et lectus tortor. Nulla quam ipsum, aliquet commodo tellus ac,
-                                    ultricies condimentum leo.</Text>
-
-                                <Button width={"full"}>Teste Git</Button>
-                            </VStack>
-                        </Box>
-                    </SimpleGrid>
-                </Container>
-
-            </StandartLayout>
+            </StandardLayout>
 
         </>
     )

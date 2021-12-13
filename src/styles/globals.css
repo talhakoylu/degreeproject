@@ -20,10 +20,14 @@ a {
 
 
 .swiper-container{
-  padding: 2rem !important;
-  margin: -1rem -2rem !important;
+  padding: 1rem 0.7rem !important;
+  margin: 0rem -0.7rem !important;
 }
 
 .swiper-button-next::after{
   padding-left: 2rem !important;
+}
+
+.swiper-slide{
+  height: auto !important;
 }

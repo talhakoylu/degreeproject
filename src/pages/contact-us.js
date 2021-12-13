@@ -1,13 +1,13 @@
 import {Text} from "@chakra-ui/react";
-import StandartLayout from "../components/layouts/StandartLayout";
+import StandardLayout from "../components/layouts/StandardLayout";
 
 const ContactUsPage = ()=>{
     return(
-        <StandartLayout>
+        <StandardLayout>
             <Text>
                 As
             </Text>
-        </StandartLayout>
+        </StandardLayout>
     )
 }
 

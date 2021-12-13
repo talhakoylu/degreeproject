@@ -1,4 +1,5 @@
-import {Button, Container, HStack, Input, InputGroup, Stack} from "@chakra-ui/react";
+import {Container, Stack, Link as ChakraLink} from "@chakra-ui/react";
+import Link from 'next/link'
 import SearchBar from "../header_components/SearchBar";
 import MemberArea from "../header_components/MemberArea";
 
@@ -12,7 +13,11 @@ export default function Header(){
                    align={"center"}
             >
 
-                <div>LOGO</div>
+                <Link href="/" passHref>
+                    <ChakraLink _hover={{
+                        textDecoration: "none"
+                    }}>LOGO</ChakraLink>
+                </Link>
 
                 <SearchBar/>
 
