@@ -13,7 +13,7 @@ export default function LastAddedQuizzes() {
                 {LastAddedQuizzesData.map((item, index) => {
                     return (
                         <Card title={item.title} image={item.image} path={item.path} description={item.description}
-                              category={item.category.title} key={index} titleLength={60} descriptionLength={150}/>
+                              category={item.category.title} key={index} titleLength={60} descriptionLength={150} boxShadow={"lg"}/>
                     )
                 })}
             </SimpleGrid>

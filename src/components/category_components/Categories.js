@@ -76,7 +76,7 @@ export default function Categories(){
                 {CategoriesData.map((item, index)=>{
                     return(
                         <SwiperSlide key={index}>
-                            <CategoryItemBox title={item.title} path={`/category/${item.path}`} image={item.image}/>
+                            <CategoryItemBox title={item.title} path={`/category${item.path}`} image={item.image}/>
                         </SwiperSlide>
                     )
                 })}

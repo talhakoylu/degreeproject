@@ -1,14 +1,14 @@
 import {Box, Button, Image, Text, VStack} from "@chakra-ui/react";
 import {useRouter} from "next/router";
 
-export default function Card({title, description, image, path, minHeight = 400, category, titleLength = 75, descriptionLength = 200}) {
+export default function Card({title, description, image, path, minHeight = 400, category, titleLength = 75, descriptionLength = 200, boxShadow = "md"}) {
     const router = useRouter();
     let titleCount = titleLength;
     let cardTitle = title.slice(0, titleCount) + (title.length > titleCount ? "..." : "");
     let descriptionCount = descriptionLength;
     let cardDescription = description.slice(0, descriptionCount) + (description.length > descriptionCount ? "..." : "");
     return (
-        <Box bg={"white"} boxShadow={"md"} minHeight={minHeight} height={"100%"} w={"100%"}
+        <Box bg={"white"} boxShadow={boxShadow} minHeight={minHeight} height={"100%"} w={"100%"}
              rounded={"md"} overflow={"hidden"} position={"relative"} display={"flex"} flexDirection={"column"}>
 
             {image && <Image src={image} width={"full"} height={200}
