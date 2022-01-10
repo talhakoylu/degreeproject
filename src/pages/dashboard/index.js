@@ -5,34 +5,38 @@ import {Avatar, Box, Button, Icon, SimpleGrid} from "@chakra-ui/react";
 import {useRouter} from "next/router";
 import Head from "next/head";
 
-const links = [
+export const links = [
     {
         pathName: "Settings",
         pathUrl: "/dashboard/user-settings",
         icon: MdSettings,
         boxColor: "cyan",
-        description: "açıklama"
+        description: "açıklama",
+        exact: true
     },
     {
         pathName: "Change Password",
         pathUrl: "/dashboard/change-password",
         icon: MdOutlineVpnKey,
         boxColor: "purple",
-        description: "açıklama"
+        description: "açıklama",
+        exact: true
     },
     {
         pathName: "Completed Quizzes",
         pathUrl: "/dashboard/completed-quizzes",
         icon: MdCheck,
         boxColor: "pink",
-        description: "açıklama"
+        description: "açıklama",
+        exact: true
     },
     {
         pathName: "Create a Quiz",
         pathUrl: "/dashboard/create-quiz",
         icon: MdOutlineAdd,
         boxColor: "orange",
-        description: "açıklama"
+        description: "açıklama",
+        exact: false
     },
 ]
 

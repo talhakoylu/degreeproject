@@ -17,9 +17,11 @@ import {
 import {MdOutlineAdd, MdOutlineDeleteForever, MdOutlineModeEditOutline} from "react-icons/md";
 import CustomTable from "../../components/CustomTable";
 import React from "react";
+import {useRouter} from "next/router";
 
 
 const CreateQuiz = () => {
+    const router = useRouter();
     const data = React.useMemo(
         () => [
             {
@@ -75,8 +77,6 @@ const CreateQuiz = () => {
                             {cell.row.values.manage.edit && <IconButton colorScheme='purple' aria-label='Edit Content' icon={<MdOutlineModeEditOutline/>}/>}
                             {cell.row.values.manage.remove && <IconButton colorScheme='red' aria-label='Remove ' icon={<MdOutlineDeleteForever/>}/>}
                         </HStack>
-
-
                         : null)
                 )
             }
@@ -90,7 +90,7 @@ const CreateQuiz = () => {
                            description={"Bu sayfadan quiz oluşturabilir, daha önce oluşturulan quizleri görebilirsiniz."}>
                 <VStack spacing={6} align={"stretch"}>
 
-                    <Button alignSelf={"end"} leftIcon={<MdOutlineAdd/>}>
+                    <Button alignSelf={"end"} leftIcon={<MdOutlineAdd/>} onClick={()=>router.push("/dashboard/create-quiz/create")}>
                         Create a Quiz
                     </Button>
 

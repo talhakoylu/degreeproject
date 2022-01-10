@@ -7,11 +7,13 @@ import {
     MdCheck,
     MdOutlineAdd,
     MdBuild,
-    MdManageAccounts, MdAccountCircle
+    MdManageAccounts, MdAccountCircle, MdHome
 } from "react-icons/md";
+import {links} from "../pages/dashboard";
+import GoBackButton from "./GoBackButton";
 
 
-export default function DashboardArea({title, description, children}) {
+export default function DashboardArea({title, description, children, showGoBackButton = false}) {
     const router = useRouter()
     return (
         <Container maxW={"container.xl"}>
@@ -23,19 +25,19 @@ export default function DashboardArea({title, description, children}) {
                        rounded={"md"} p={4}>
                     <Avatar bg='blue.100' icon={<MdManageAccounts fontSize='4.5rem'/>} size={"2xl"}/>
                     <Text>Name Surname </Text>
-                    <NavLink href={"/dashboard"} exact={true} pathName={"Dashboard Home Page"} icon={MdBuild}/>
-                    <NavLink href={"/dashboard/user-settings"} exact={true} pathName={"User Settings"}
-                             icon={MdManageAccounts}/>
-                    <NavLink href={"/dashboard/change-password"} exact={true} pathName={"Change Password"}
-                             icon={MdOutlineVpnKey}/>
-                    <NavLink href={"/dashboard/completed-quizzes"} exact={true} pathName={"Completed Quizzes"}
-                             icon={MdCheck}/>
-                    <NavLink href={"/dashboard/create-quiz"} exact={true} pathName={"Create a Quiz"}
-                             icon={MdOutlineAdd}/>
+
+                    <NavLink href={"/dashboard"} exact={true} pathName={"Dashboard Home Page"} icon={MdHome}/>
+                    {links.map((item, index)=> {
+                        return <NavLink key={index} href={item.pathUrl} exact={item.exact} pathName={item.pathName} icon={item.icon}/>
+                    })}
+
                 </Stack>
 
                 <Box flex={1} backgroundColor={"white"} border={"1px"} borderColor={"lightgrey"} rounded={"md"} mt={4}
                      p={4}>
+                    <Box width={"100%"} display={showGoBackButton ? "flex" : "none"} justifyContent={"flex-end"}>
+                        <GoBackButton/>
+                    </Box>
                     {title &&
                     <Stack spacing={2} mb={6}>
                         <Heading size={"lg"}>{title}</Heading>
