@@ -1,7 +1,8 @@
 import StandardLayout from "../../../components/layouts/StandardLayout";
 import DashboardArea from "../../../components/DashboardArea";
 import * as yup from "yup";
-import {useForm} from "react-hook-form";
+
+import {useForm, Controller} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {
     Button,
@@ -15,6 +16,7 @@ import {
     Stack, Text, Textarea, UnorderedList,
     VStack
 } from "@chakra-ui/react";
+import CustomRichText from "../../../components/RichText";
 
 const formSchema = yup.object().shape({
     title: yup.string()
@@ -28,9 +30,10 @@ const formSchema = yup.object().shape({
 
 })
 
+
 const QuizCreatePage = () => {
 
-    const {register, handleSubmit, formState: {errors}} = useForm({
+    const {control, register, handleSubmit, setValue, formState: {errors}} = useForm({
         resolver: yupResolver(formSchema)
     });
     const onSubmit = data => console.log(data);
@@ -46,6 +49,8 @@ const QuizCreatePage = () => {
                     <VStack spacing={2} align={"stretch"}>
                         <SimpleGrid columns={1} spacing={6}>
 
+
+
                             <FormControl id={"title"} isInvalid={errors.title}>
                                 <FormLabel>Quiz Title</FormLabel>
                                 <Input placeholder="Enter a title" type="title" {...register("title")}/>
@@ -57,7 +62,18 @@ const QuizCreatePage = () => {
 
                             <FormControl id={"description"} isInvalid={errors.description}>
                                 <FormLabel>Description</FormLabel>
-                                <Textarea height={150} placeholder="Explain your quiz" {...register("description")}/>
+                                <Controller
+                                    control={control}
+                                    name="description"
+                                    render={({ field: { onChange, onBlur, value, ref } }) => (
+                                        <CustomRichText
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            value={value}
+                                            placeholder="Type @ or # to see mentions autocomplete"
+                                        />
+                                    )}
+                                />
                                 <FormErrorMessage>{errors.description && errors.description.message}</FormErrorMessage>
                                 <FormHelperText>
                                     Write a description about this quiz you created.

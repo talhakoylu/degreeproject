@@ -1,5 +1,6 @@
 import '../styles/globals.css'
 import {ChakraProvider, extendTheme} from "@chakra-ui/react";
+import { MantineProvider } from '@mantine/core';
 
 import 'swiper/swiper-bundle.min.css'
 import 'swiper/swiper.min.css'
@@ -51,12 +52,20 @@ const theme = extendTheme({
         }
     }
 });
-
 function MyApp({Component, pageProps}) {
     return (
-        <ChakraProvider theme={theme}>
-            <Component {...pageProps} />
-        </ChakraProvider>
+        <MantineProvider
+            withGlobalStyles
+            withNormalizeCSS
+            theme={{
+                /** Put your mantine theme override here */
+                colorScheme: 'light',
+            }}
+        >
+            <ChakraProvider theme={theme}>
+                <Component {...pageProps} />
+            </ChakraProvider>
+        </MantineProvider>
     )
 }
 

@@ -5,6 +5,10 @@ import {useRef} from "react";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {QuizzesData} from "../../../data/QuizzesData";
 import Card from "../Card";
+import SwiperCore, {Navigation, Pagination} from "swiper";
+
+SwiperCore.use([Pagination, Navigation]);
+
 
 export default function PickedQuizzesForYou() {
     const prevRefBoard = useRef(null);

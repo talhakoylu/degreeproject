@@ -1,4 +1,4 @@
-import {Avatar, Box, Container, Heading, Stack, Text} from "@chakra-ui/react";
+import {Avatar, Box, Container, Heading, Stack, Text, VStack} from "@chakra-ui/react";
 import NavLink from "./NavLink";
 import {useRouter} from "next/router";
 import {
@@ -17,27 +17,29 @@ export default function DashboardArea({title, description, children, showGoBackB
     const router = useRouter()
     return (
         <Container maxW={"container.xl"}>
-            <Stack spacing={4} direction={{base: "column", md: "row"}} align={"start"}>
+            <Stack spacing={4} direction={{base: "column", md: "row"}} align={"stretch"}>
 
-                <Stack spacing={3} align={"center"} width={{base: "100%", md: "auto"}} maxW={{base: "100%", md: "25%"}}
-                       backgroundColor={"white"} border={"1px"}
-                       borderColor={"lightgrey"}
-                       rounded={"md"} p={4}>
-                    <Avatar bg='blue.100' icon={<MdManageAccounts fontSize='4.5rem'/>} size={"2xl"}/>
-                    <Text>Name Surname </Text>
+                <VStack spacing={showGoBackButton ? 4 : 0} maxW={{base: "100%", md: "25%"}} order={{base: 1, md: 0}} mt={{base: 2, md: 0}}>
+                        <GoBackButton display={showGoBackButton? "flex" : "none"}/>
+                    <Stack spacing={3} align={"center"} width={{base: "100%", md: "auto"}}
+                           backgroundColor={"white"} border={"1px"}
+                           borderColor={"lightgrey"}
+                           rounded={"md"} p={4}>
+                        <Avatar bg='blue.100' icon={<MdManageAccounts fontSize='4.5rem'/>} size={"2xl"}/>
+                        <Text>Name Surname </Text>
 
-                    <NavLink href={"/dashboard"} exact={true} pathName={"Dashboard Home Page"} icon={MdHome}/>
-                    {links.map((item, index)=> {
-                        return <NavLink key={index} href={item.pathUrl} exact={item.exact} pathName={item.pathName} icon={item.icon}/>
-                    })}
+                        <NavLink href={"/dashboard"} exact={true} pathName={"Dashboard Home Page"} icon={MdHome}/>
+                        {links.map((item, index)=> {
+                            return <NavLink key={index} href={item.pathUrl} exact={item.exact} pathName={item.pathName} icon={item.icon}/>
+                        })}
 
-                </Stack>
+                    </Stack>
+                </VStack>
+
+
 
                 <Box flex={1} backgroundColor={"white"} border={"1px"} borderColor={"lightgrey"} rounded={"md"} mt={4}
                      p={4}>
-                    <Box width={"100%"} display={showGoBackButton ? "flex" : "none"} justifyContent={"flex-end"}>
-                        <GoBackButton/>
-                    </Box>
                     {title &&
                     <Stack spacing={2} mb={6}>
                         <Heading size={"lg"}>{title}</Heading>

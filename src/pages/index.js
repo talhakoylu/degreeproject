@@ -1,40 +1,13 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
 import {useRef} from "react";
-import {
-    Box,
-    Button,
-    Container, Grid, Heading,
-    HStack, IconButton, Image,
-    Input,
-    InputGroup,
-    InputLeftAddon,
-    InputRightAddon, ListItem, SimpleGrid,
-    Stack, Text, UnorderedList, VStack
-} from "@chakra-ui/react";
-
-import SwiperCore, {
-    Pagination, Navigation
-} from 'swiper';
-import {Swiper, SwiperSlide} from "swiper/react";
-import {MdNavigateBefore, MdNavigateNext} from "react-icons/md";
+import { VStack } from "@chakra-ui/react";
 import {useRouter} from "next/router";
 import StandardLayout from "../components/layouts/StandardLayout";
-import ContainerArea from "../components/ContainerArea";
 import PickedQuizzesForYou from "../components/quiz_components/PickedQuizzesForYou";
 import Categories from "../components/category_components/Categories";
 import LastAddedQuizzes from "../components/quiz_components/LastAddedQuizzes";
 
-
-SwiperCore.use([Pagination, Navigation]);
-
-
 export default function Home() {
-    const router = useRouter();
-    const prevRefBoard = useRef(null);
-    const nextRefBoard = useRef(null);
-    const prevRefCategories = useRef(null);
-    const nextRefCategories = useRef(null);
     return (
         <>
             <Head>

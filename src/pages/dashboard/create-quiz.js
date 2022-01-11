@@ -18,6 +18,7 @@ import {MdOutlineAdd, MdOutlineDeleteForever, MdOutlineModeEditOutline} from "re
 import CustomTable from "../../components/CustomTable";
 import React from "react";
 import {useRouter} from "next/router";
+import Link from "next/link";
 
 
 const CreateQuiz = () => {
@@ -72,10 +73,17 @@ const CreateQuiz = () => {
                 accessor: "manage",
                 width: 15,
                 Cell: ({cell}) => (
+
                     (cell.row.values.manage ?
                         <HStack>
-                            {cell.row.values.manage.edit && <IconButton colorScheme='purple' aria-label='Edit Content' icon={<MdOutlineModeEditOutline/>}/>}
-                            {cell.row.values.manage.remove && <IconButton colorScheme='red' aria-label='Remove ' icon={<MdOutlineDeleteForever/>}/>}
+                            {
+                                cell.row.values.manage.edit &&
+                                        <IconButton colorScheme='purple' aria-label='Edit Content' icon={<MdOutlineModeEditOutline/>}
+                                                    onClick={()=>router.push(`/dashboard/quiz/${cell.row.values.id}/edit`)}
+                                        />
+                            }
+                            {cell.row.values.manage.remove &&
+                            <IconButton colorScheme='red' aria-label='Remove ' icon={<MdOutlineDeleteForever/>}/>}
                         </HStack>
                         : null)
                 )
@@ -90,7 +98,8 @@ const CreateQuiz = () => {
                            description={"Bu sayfadan quiz oluşturabilir, daha önce oluşturulan quizleri görebilirsiniz."}>
                 <VStack spacing={6} align={"stretch"}>
 
-                    <Button alignSelf={"end"} leftIcon={<MdOutlineAdd/>} onClick={()=>router.push("/dashboard/create-quiz/create")}>
+                    <Button alignSelf={"end"} leftIcon={<MdOutlineAdd/>}
+                            onClick={() => router.push("/dashboard/create-quiz/create")}>
                         Create a Quiz
                     </Button>
 
