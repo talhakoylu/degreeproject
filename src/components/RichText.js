@@ -8,7 +8,7 @@ const DynamicRichText = dynamic(() => import('@mantine/rte'), {
     loading: () => null,
 });
 
-const CustomRichText = ({...dist}) => {
+const CustomRichText = ({imageUploadButton, ...dist}) => {
     return <DynamicRichText
         sx={{
             ".ql-editor": {
@@ -21,7 +21,7 @@ const CustomRichText = ({...dist}) => {
         controls={[
             ['bold', 'italic', 'underline', 'blockquote', 'clean'],
             ['unorderedList', 'h1', 'h2', 'h3', 'h4', 'h5'],
-            ['link'],
+            ['link', imageUploadButton && 'image'],
             ['sup', 'sub'],
             ['alignLeft', 'alignCenter', 'alignRight'],
         ]}

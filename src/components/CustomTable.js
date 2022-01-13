@@ -1,7 +1,7 @@
 import {useTable, useFlexLayout} from "react-table";
 import {Table, TableCaption, Tbody, Td, Tfoot, Th, Thead, Tr} from "@chakra-ui/react";
 
-export default function CustomTable({data, columns}) {
+export default function CustomTable({data, columns, ...props}) {
 
 
     const tableInstance = useTable({columns, data}, useFlexLayout)
@@ -14,7 +14,7 @@ export default function CustomTable({data, columns}) {
     } = tableInstance
 
     return (
-        <Table variant='striped' colorScheme='gray' {...getTableProps()}>
+        <Table variant='striped' colorScheme='gray' {...getTableProps()} {...props}>
             <Thead>
                 {headerGroups.map((headerGroup, index) => (
                     <Tr key={index} {...headerGroup.getHeaderGroupProps()}>

@@ -1,4 +1,4 @@
-import {Avatar, Box, Container, Heading, Stack, Text, VStack} from "@chakra-ui/react";
+import {Avatar, Box, Container, Divider, Heading, Stack, Text, VStack} from "@chakra-ui/react";
 import NavLink from "./NavLink";
 import {useRouter} from "next/router";
 import {
@@ -44,7 +44,9 @@ export default function DashboardArea({title, description, children, showGoBackB
                     <Stack spacing={2} mb={6}>
                         <Heading size={"lg"}>{title}</Heading>
                         {description && <Text>{description}</Text>}
+                        <Divider borderColor={"gray.400"} py={2}/>
                     </Stack>
+                    
                     }
                     {children}
                 </Box>

@@ -24,7 +24,8 @@ const formSchema = yup.object().shape({
         .min(15, "Title must be at least 15 characters.")
         .max(255, "Title can be up to 255 characters."),
     description: yup.string()
-        .required("Description is required."),
+        .required("Description is required.")
+        .min(30, "Description must be at least 30 characters!"),
     category: yup.string()
         .required("Category is required."),
 
@@ -53,7 +54,7 @@ const QuizCreatePage = () => {
 
                             <FormControl id={"title"} isInvalid={errors.title}>
                                 <FormLabel>Quiz Title</FormLabel>
-                                <Input placeholder="Enter a title" type="title" {...register("title")}/>
+                                <Input placeholder="Enter a title" type="text" {...register("title")}/>
                                 <FormErrorMessage>{errors.title && errors.title.message}</FormErrorMessage>
                                 <FormHelperText>
                                     Sınavınız için bir başlık belirleyin.
@@ -70,7 +71,6 @@ const QuizCreatePage = () => {
                                             onChange={onChange}
                                             onBlur={onBlur}
                                             value={value}
-                                            placeholder="Type @ or # to see mentions autocomplete"
                                         />
                                     )}
                                 />
