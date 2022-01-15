@@ -12,7 +12,7 @@ export default function LastAddedQuizzes() {
             <SimpleGrid columns={{base: 1, sm: 2, lg: 3}} spacingX='20px' spacingY='30px'>
                 {LastAddedQuizzesData.map((item, index) => {
                     return (
-                        <Card title={item.title} image={item.image} path={item.path} description={item.description}
+                        <Card bodyLink title={item.title} image={item.image} path={`/quiz/${item.id}/${item.path}`} description={item.description}
                               category={item.category.title} key={index} titleLength={60} descriptionLength={150} boxShadow={"lg"}/>
                     )
                 })}

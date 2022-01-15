@@ -51,7 +51,7 @@ export default function PickedQuizzesForYou() {
                 {QuizzesData.map((item, index) => {
                     return (
                         <SwiperSlide key={index}>
-                            <Card title={item.title} description={item.description} image={item.image} path={item.path} category={item.category.title}/>
+                            <Card bodyLink title={item.title} description={item.description} image={item.image} path={`/quiz/${item.id}/${item.path}`} category={item.category.title}/>
                         </SwiperSlide>
                     )
                 })}
