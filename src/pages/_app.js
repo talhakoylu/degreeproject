@@ -1,9 +1,10 @@
-import '../styles/globals.css'
-import {ChakraProvider, extendTheme} from "@chakra-ui/react";
+import '../styles/globals.css';
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { MantineProvider } from '@mantine/core';
-
-import 'swiper/swiper-bundle.min.css'
-import 'swiper/swiper.min.css'
+import { QueryClient, QueryClientProvider } from 'react-query';
+import 'swiper/swiper-bundle.min.css';
+import 'swiper/swiper.min.css';
+import { useState } from 'react';
 
 const theme = extendTheme({
     colors: {
@@ -52,8 +53,18 @@ const theme = extendTheme({
         }
     }
 });
-function MyApp({Component, pageProps}) {
+
+
+function MyApp({ Component, pageProps }) {
+    const [queryClient] = useState(() => new QueryClient({
+        defaultOptions: {
+            queries: {
+                refetchOnWindowFocus: false,
+            },
+        },
+    }));
     return (
+
         <MantineProvider
             withGlobalStyles
             withNormalizeCSS
@@ -63,10 +74,13 @@ function MyApp({Component, pageProps}) {
             }}
         >
             <ChakraProvider theme={theme}>
-                <Component {...pageProps} />
+                <QueryClientProvider client={queryClient}>
+                    <Component {...pageProps} />
+                </QueryClientProvider>
+
             </ChakraProvider>
         </MantineProvider>
-    )
+    );
 }
 
-export default MyApp
+export default MyApp;
