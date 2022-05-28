@@ -4,6 +4,7 @@ import ContainerArea from "../../components/ContainerArea";
 import {Avatar, Box, Button, Icon, SimpleGrid} from "@chakra-ui/react";
 import {useRouter} from "next/router";
 import Head from "next/head";
+import withAuth from "@/HOC/withAuth";
 
 export const links = [
     {
@@ -73,4 +74,4 @@ const DashboardIndexPage = () => {
     )
 }
 
-export default DashboardIndexPage
+export default withAuth(DashboardIndexPage)

@@ -6,7 +6,6 @@ import { useQuery } from "react-query";
 import axios from 'axios';
 
 export default function LastAddedQuizzes() {
-
     const { isLoading, isError, data, error } = useQuery('lastAddedQuizzes', async () => {
         return await axios.get('http://localhost:8080/api/quiz/find-all').then(response => response.data.data);
     });

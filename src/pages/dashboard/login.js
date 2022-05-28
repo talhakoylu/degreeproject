@@ -18,6 +18,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import Head from "next/head";
 import FullScreenLayout from "../../components/layouts/FullScreenLayout";
 import EntryBox from "../../components/EntryBox";
+import { login, setTokenToStorage, useLoginService } from "@/services/auth.service";
 
 const formSchema = yup.object().shape({
     email: yup.string()
@@ -41,9 +42,19 @@ const formSchema = yup.object().shape({
 
 const LoginPage = () => {
     const {register, handleSubmit, formState: {errors}} = useForm({
-        resolver: yupResolver(formSchema)
+        resolver: yupResolver(formSchema),
+        defaultValues: {
+            email: "talhakoylu0@gmail.com",
+            password: "Talha_1998"
+        }
     });
-    const onSubmit = data => console.log(data);
+
+    const {loginRequest} = useLoginService();
+
+    const onSubmit = async (data) =>  {
+        await loginRequest(data);
+    };
+    
     return (
         <FullScreenLayout>
             <Head>
