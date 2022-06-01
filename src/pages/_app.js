@@ -10,6 +10,7 @@ import { store } from '@/store';
 import { getAuthToken } from '@/services/auth.service';
 import axios from 'axios';
 import AuthProvider from '@/components/AuthProvider';
+import { globalConstants } from '@/global_constants';
 const toast = createStandaloneToast();
 
 
@@ -22,7 +23,7 @@ export const queryClient = new QueryClient({
     },
   });
   
-  axios.defaults.baseURL = 'http://localhost:8080/api';
+  axios.defaults.baseURL = globalConstants.api;
   
   axios.interceptors.request.use((config) => {
     const jwtToken = getAuthToken();

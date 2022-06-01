@@ -1,5 +1,5 @@
 import { checkAuth, clearToken, getAuthToken } from '@/services/auth.service';
-import { setReady } from '@/store/slices/auth';
+import { selectIsLoggedIn, setReady } from '@/store/slices/auth';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -18,6 +18,7 @@ const AuthProvider = ({ children }) => {
           await meRequest();
         } catch {
           await clearToken();
+          await localStorage.removeItem('user')
 
          Router.replace('/dashboard/login');
         } finally {

@@ -10,10 +10,14 @@ import { useLogoutService } from "@/services/auth.service";
 export default function MemberArea() {
     const router = useRouter();
     const auth = useSelector(authValue);
-    const {logoutRequest} = useLogoutService();
+    const { logoutRequest } = useLogoutService();
     const handleClick = async () => {
-        await logoutRequest()
-    }
+        await logoutRequest();
+        if (router.pathname.startsWith('/dashboard')) {
+            router.replace('/');
+        }
+    };
+
     return (
         <div>
             {
