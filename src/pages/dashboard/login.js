@@ -15,6 +15,7 @@ import EntryBox from "../../components/EntryBox";
 import { login, setTokenToStorage, useLoginService } from "@/services/auth.service";
 import { authValue } from "@/store/slices/auth";
 import { useSelector } from 'react-redux';
+import { useEffect } from "react";
 
 const formSchema = yup.object().shape({
     email: yup.string()
@@ -40,8 +41,14 @@ const LoginPage = () => {
     const { loginRequest } = useLoginService();
     const onSubmit = async (data) => {
         await loginRequest(data);
-        router.push('/')
+        router.replace('/');
     };
+
+    useEffect(() => {
+        if (auth.isLoggedIn) {
+            router.replace('/')
+        }
+    }, [auth.isLoggedIn]);
 
     return (
         <FullScreenLayout>
