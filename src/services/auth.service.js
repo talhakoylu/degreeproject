@@ -1,21 +1,29 @@
 import axios from "axios";
 
- export function setTokenToStorage(_token) {
-    localStorage.setItem("token", _token);
-  }
-  
-  export function getAuthToken() {
-    return localStorage.getItem("token");
-  }
-  
-  export function clearToken() {
-    return localStorage.removeItem("token");
-  }
-  
-  export async function checkAuth() {
-    return await axios.get("/user/me");
-  }
-  
+export function setTokenToStorage(_token) {
+  localStorage.setItem("token", _token);
+}
+
+export function getAuthToken() {
+  return localStorage.getItem("token");
+}
+
+export async function getUserDataFromLocale() {
+  return await localStorage.getItem("user");
+}
+
+export function clearToken() {
+  return localStorage.removeItem("token");
+}
+
+export function clearLocaleStorage() {
+  return localStorage.clear();
+}
+
+export async function checkAuth() {
+  return await axios.get("/user/me");
+}
+
 export async function login(data) {
   return axios.post("/user/login", data);
 }
@@ -29,6 +37,7 @@ export function useLogoutService() {
 
   const logoutRequest = async () => {
     await clearToken();
+    await clearLocaleStorage();
     dispatch(resetAction);
   };
 
@@ -43,6 +52,7 @@ export function useLoginService() {
   const loginRequest = async (data) => {
     const result = await login(data);
     await localStorage.setItem('token', result.data.token);
+    await localStorage.setItem('user', JSON.stringify(result.data.data));
     meRequest();
   };
 
@@ -52,14 +62,14 @@ export function useLoginService() {
 }
 
 async function setAuthUser({ dispatch, result }) {
-  console.log('setStoreAuthlaniyor')
+  console.log('setStoreAuthlaniyor');
   dispatch(
     setStoreAuth({
       user: result.data.data,
       isLoggedIn: true,
     }),
   );
-  console.log('setStoreAuthlamisiz')
+  console.log('setStoreAuthlamisiz');
 }
 
 export function useMeService() {
