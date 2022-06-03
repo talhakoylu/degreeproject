@@ -10,21 +10,24 @@ import {
     SimpleGrid, Stack, Text, UnorderedList,
     VStack
 } from "@chakra-ui/react";
-import {useForm} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import {Link as NextLink} from "next/link";
+import { Link as NextLink } from "next/link";
 import Head from "next/head";
+import { useMutation } from "react-query";
+import { ApiService } from "@/services/api.service";
+import { useRouter } from "next/router";
 
 const formSchema = yup.object().shape({
-    name: yup.string()
+    firstName: yup.string()
         .required("First name is required."),
-    surname: yup.string()
+    lastName: yup.string()
         .required("Last name is required."),
     email: yup.string()
         .required("Email is required.")
         .email("Invalid email format."),
-    birthDate: yup.string()
+    birthdate: yup.string()
         .required('Birthday is required.')
         .matches(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, 'Birthday must be a valid date in the format YYYY-MM-DD'),
     password: yup.string()
@@ -45,58 +48,76 @@ const formSchema = yup.object().shape({
         .oneOf([yup.ref('password')], "Password must match."),
     termsAndConditions: yup.bool()
         .oneOf([true], "Terms, Conditions and Privacy Policy must be accepted.")
-})
+});
 
-export default function RegisterPage(){
-    const {register, handleSubmit, formState: {errors}} = useForm({
+export default function RegisterPage() {
+    const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(formSchema)
     });
-    const onSubmit = data => console.log(data);
-    return(
+
+    const router = useRouter();
+
+    const mutation = useMutation(async (data) => {
+        await ApiService.userQueries.register(data);
+    });
+
+
+    const onSubmit = data => {
+        data.confirmPassword = undefined;
+        data.termsAndConditions = undefined;
+        mutation.mutateAsync(data);
+    };
+
+    if (mutation.isSuccess) {
+        router.replace('/');
+
+    }
+
+    return (
         <FullScreenLayout>
             <Head>
                 <title>Sign Up Page</title>
-                <meta name="viewport" content="initial-scale=1.0, width=device-width"/>
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
             <EntryBox title={"Kayıt Ol"} description={"Etkinlik oluşturmak, sonuçları incelemek ve daha fazlası için hesap oluştur."} maxW={800}>
                 <form>
                     <VStack spacing={2} align={"stretch"}>
 
-                        <SimpleGrid columns={{base: 1, md: 2}} spacing={6}>
+                        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
 
-                            <FormControl id={"name"} isInvalid={errors.name}>
-                                <FormLabel htmlFor='name'>Name</FormLabel>
+                            <FormControl id={"firstName"} isInvalid={errors.firstName}>
+                                <FormLabel htmlFor='firstName'>Name</FormLabel>
                                 <Input variant='flushed' type='text'
-                                       placeholder={"John"} {...register("name")}/>
-                                <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
+                                    placeholder={"John"} {...register("firstName")} />
+                                <FormErrorMessage>{errors.firstName && errors.firstName.message}</FormErrorMessage>
                             </FormControl>
 
-                            <FormControl id={"surname"} isInvalid={errors.surname}>
+                            <FormControl id={"lastName"} isInvalid={errors.lastName}>
                                 <FormLabel>Surname</FormLabel>
                                 <Input variant='flushed' placeholder="Doe"
-                                       type="text" {...register("surname")}/>
-                                <FormErrorMessage>{errors.surname && errors.surname.message}</FormErrorMessage>
+                                    type="text" {...register("lastName")} />
+                                <FormErrorMessage>{errors.lastName && errors.lastName.message}</FormErrorMessage>
                             </FormControl>
 
                             <FormControl id={"email"} isInvalid={errors.email}>
                                 <FormLabel htmlFor='email'>Email</FormLabel>
                                 <Input variant='flushed' type='email'
-                                       placeholder={"john.doe@example.com"} {...register("email")}/>
+                                    placeholder={"john.doe@example.com"} {...register("email")} />
                                 <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
                             </FormControl>
 
 
-                            <FormControl id={"birthDate"} isInvalid={errors.birthDate}>
-                                <FormLabel htmlFor='birthDate'>Birth Date</FormLabel>
+                            <FormControl id={"birthdate"} isInvalid={errors.birthdate}>
+                                <FormLabel htmlFor='birthdate'>Birth Date</FormLabel>
                                 <Input variant='flushed' type='date'
-                                       {...register("birthDate")}/>
-                                <FormErrorMessage>{errors.birthDate && errors.birthDate.message}</FormErrorMessage>
+                                    {...register("birthdate")} />
+                                <FormErrorMessage>{errors.birthdate && errors.birthdate.message}</FormErrorMessage>
                             </FormControl>
 
                             <FormControl id={"password"} isInvalid={errors.password}>
                                 <FormLabel>Password</FormLabel>
                                 <Input variant='flushed' placeholder="************"
-                                       type="password" {...register("password")}/>
+                                    type="password" {...register("password")} />
                                 <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
                                 <FormHelperText>
                                     <Stack spacing={1}>
@@ -113,7 +134,7 @@ export default function RegisterPage(){
                             <FormControl id={"confirmPassword"} isInvalid={errors.confirmPassword}>
                                 <FormLabel>Confirm Password</FormLabel>
                                 <Input variant='flushed' placeholder="************"
-                                       type="password" {...register("confirmPassword")}/>
+                                    type="password" {...register("confirmPassword")} />
                                 <FormErrorMessage>{errors.confirmPassword && errors.confirmPassword.message}</FormErrorMessage>
                                 <FormHelperText>
                                     <Stack spacing={1}>
@@ -144,12 +165,12 @@ export default function RegisterPage(){
                         </SimpleGrid>
 
                         <Button alignSelf={"end"} type={"submit"} onClick={handleSubmit((onSubmit))}
-                                justifySelf={"center"} colorScheme='green' rounded={"3xl"}>
+                            justifySelf={"center"} colorScheme='green' rounded={"3xl"}>
                             Sign Up
                         </Button>
                     </VStack>
                 </form>
             </EntryBox>
         </FullScreenLayout>
-    )
+    );
 }
