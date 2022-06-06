@@ -1,8 +1,9 @@
 import DashboardArea from "@/components/DashboardArea";
 import StandardLayout from "@/components/layouts/StandardLayout";
 import CustomRichText from "@/components/RichText";
-import { Button, Checkbox, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Input, Stack, Textarea, VStack } from "@chakra-ui/react";
+import { Box, Button, Checkbox, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Input, Radio, RadioGroup, Stack, Textarea, VStack } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 
@@ -15,9 +16,18 @@ const formSchema = yup.object().shape({
 })
 
 export default function AddQuestionPage() {
-    const { control, register, handleSubmit, formState: { errors } } = useForm({
+    const {getValues, setValue, watch, control, register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(formSchema)
     });
+
+    const [selectAnswer, setSelectAnswer] = useState([]);
+
+    const handleOnChange = item => {
+        if (item.target.value) {
+            setSelectAnswer(oldArray => [...oldArray, item])
+        }
+    }
+
     const onSubmit = data => console.log(data);
     return (
         <StandardLayout>
@@ -43,59 +53,48 @@ export default function AddQuestionPage() {
                             </FormHelperText>
                         </FormControl>
 
-                        <Stack direction={{ base: "column", md: "row" }}>
-                            <FormControl id={"answer1"} isInvalid={errors.answer1}>
-                                <FormLabel>Answer 1</FormLabel>
-                                <Textarea placeholder="Answer text" type="text" {...register("answer1")} />
-                                <FormErrorMessage>{errors.answer1 && errors.answer1.message}</FormErrorMessage>
-                            </FormControl>
-                            <FormControl id={"answer1IsTrue"} isInvalid={errors.answer1IsTrue} maxW={{ base: "100%", md: "40%" }}>
-                                <FormLabel>Is answer 1 is a correct answer?</FormLabel>
-                                <Checkbox {...register("answer1IsTrue")}>Check this box if this is a correct answer.</Checkbox>
-                                <FormErrorMessage>{errors.answer1IsTrue && errors.answer1IsTrue.message}</FormErrorMessage>
-                            </FormControl>
-                        </Stack>
+                        <Controller
+                            control={control}
+                            name="correctAnswer"
+                            render={({
+                                field: { onChange, onBlur, value, name, ref },
+                                fieldState: { invalid, isTouched, isDirty, error },
+                                formState,
+                            }) => (
+                                <RadioGroup 
+                                    onChange={onChange} 
+                                    value={value}
+                                >
+                                {["1","2","3","4"].map((answerNumber, k) => {
+                                    return (
+                                        <Stack key={k} direction={{ base: "column", md: "row" }}>
+                                            <FormControl id={`answer${answerNumber}`} isInvalid={errors.answer1}>
+                                                <FormLabel>Answer {answerNumber}</FormLabel>
+                                                <Textarea placeholder="Answer text" type="text" {...register(`answer${answerNumber}`, {
+                                                    onChange: (e) => {
+                                                        const correctAnswer = getValues('correctAnswer');
+                                                        if(!e.target.value && correctAnswer === answerNumber){
+                                                            setValue('correctAnswer', null);
+                                                        }
+                                                    }
+                                                })} />
+                                                <FormErrorMessage>{errors[`answer${answerNumber}`] && errors[`answer${answerNumber}`].message}</FormErrorMessage>
+                                            </FormControl>
+                                            <FormControl id={`answerCorrectLabel${answerNumber}`} maxW={{ base: "100%", md: "40%" }}>
+                                                <FormLabel>Is answer {answerNumber} is a correct answer?</FormLabel>
+                                                <Radio name={answerNumber} id={`answerCorrect${answerNumber}`} value={answerNumber} isDisabled={watch(`answer${answerNumber}`) ? false : true}>Check this box if this is a correct answer.</Radio>
+                                                <FormErrorMessage>{errors[`correctAnswer`] && errors[`correctAnswer`].message}</FormErrorMessage>
+                                            </FormControl>
+                                        </Stack>
+                                    )
+                                })}
+                                </RadioGroup>
+                            )}
+                            />
 
-                        <Stack direction={{ base: "column", md: "row" }}>
-                            <FormControl id={"answer2"} isInvalid={errors.answer2}>
-                                <FormLabel>Answer 2</FormLabel>
-                                <Textarea placeholder="Answer text" type="text" {...register("answer2")} />
-                                <FormErrorMessage>{errors.answer2 && errors.answer2.message}</FormErrorMessage>
-                            </FormControl>
-                            <FormControl id={"answer2IsTrue"} isInvalid={errors.answer2IsTrue} maxW={{ base: "100%", md: "40%" }}>
-                                <FormLabel>Is answer 2 is a correct answer?</FormLabel>
-                                <Checkbox {...register("answer2IsTrue")}>Check this box if this is a correct answer.</Checkbox>
-                                <FormErrorMessage>{errors.answer2IsTrue && errors.answer2IsTrue.message}</FormErrorMessage>
-                            </FormControl>
-                        </Stack>
-
-                        <Stack direction={{ base: "column", md: "row" }}>
-                            <FormControl id={"answer3"} isInvalid={errors.answer3}>
-                                <FormLabel>Answer 3</FormLabel>
-                                <Textarea placeholder="Answer text" type="text" {...register("answer3")} />
-                                <FormErrorMessage>{errors.answer3 && errors.answer3.message}</FormErrorMessage>
-                            </FormControl>
-                            <FormControl id={"answer3IsTrue"} isInvalid={errors.answer3IsTrue} maxW={{ base: "100%", md: "40%" }}>
-                                <FormLabel>Is answer 3 is a correct answer?</FormLabel>
-                                <Checkbox {...register("answer3IsTrue")}>Check this box if this is a correct answer.</Checkbox>
-                                <FormErrorMessage>{errors.answer3IsTrue && errors.answer3IsTrue.message}</FormErrorMessage>
-                            </FormControl>
-                        </Stack>
-
-                        <Stack direction={{ base: "column", md: "row" }}>
-                            <FormControl id={"answer4"} isInvalid={errors.answer4}>
-                                <FormLabel>Answer 4</FormLabel>
-                                <Textarea placeholder="Answer text" type="text" {...register("answer4")} />
-                                <FormErrorMessage>{errors.answer4 && errors.answer4.message}</FormErrorMessage>
-                            </FormControl>
-                            <FormControl id={"answer4IsTrue"} isInvalid={errors.answer4IsTrue} maxW={{ base: "100%", md: "40%" }}>
-                                <FormLabel>Is answer 4 is a correct answer?</FormLabel>
-                                <Checkbox {...register("answer4IsTrue")}>Check this box if this is a correct answer.</Checkbox>
-                                <FormErrorMessage>{errors.answer4IsTrue && errors.answer4IsTrue.message}</FormErrorMessage>
-                            </FormControl>
-                        </Stack>
 
                         <Button isFullWidth colorScheme={"purple"} type={"submit"} onClick={handleSubmit((onSubmit))}>Save</Button>
+
                     </VStack>
                 </form>
             </DashboardArea>

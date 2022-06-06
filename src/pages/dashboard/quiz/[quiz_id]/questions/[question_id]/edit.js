@@ -33,7 +33,7 @@ export default function EditQuestionPage() {
             answer4IsTrue: true,
         }
     });
-    const onSubmit = data => console.log(`${quiz_id}, ${question_id}`);
+    const onSubmit = data => console.log(`${quiz_id}, ${question_id}, ${data}`);
     return (
         <StandardLayout>
             <DashboardArea title={"Soru Düzenle"} description={"Bu sayfadan eklemiş olduğunuz bir soruyu düzenleyebilirsiniz."} showGoBackButton>

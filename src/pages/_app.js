@@ -1,10 +1,68 @@
 import '../styles/globals.css';
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider, createStandaloneToast, extendTheme } from "@chakra-ui/react";
 import { MantineProvider } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import 'swiper/swiper-bundle.min.css';
 import 'swiper/swiper.min.css';
 import { useState } from 'react';
+import { Provider } from 'react-redux';
+import { store } from '@/store';
+import { getAuthToken } from '@/services/auth.service';
+import axios from 'axios';
+import AuthProvider from '@/components/AuthProvider';
+import { globalConstants } from '@/global_constants';
+const toast = createStandaloneToast();
+
+
+export const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        retry: false,
+      },
+    },
+  });
+  
+  axios.defaults.baseURL = globalConstants.api;
+  
+  axios.interceptors.request.use((config) => {
+    const jwtToken = getAuthToken();
+    if (jwtToken !== null) {
+      config.headers["Authorization"] = `Bearer ${jwtToken}`;
+    }
+    return config;
+  });
+  
+  axios.interceptors.response.use(
+    (response) => {
+        if(response?.data?.message){
+            toast({
+              description: response?.data?.message,
+              status: 'success',
+              duration: 4000,
+              isClosable: true,
+            });
+        }
+        
+      return response;
+    },
+    function (error) {
+        if(error?.response?.data?.message){
+            toast({
+              title: error?.response?.data?.errorName,
+              description: error?.response?.data?.message,
+              status: 'error',
+              duration: 4000,
+              isClosable: true,
+            });
+        }
+
+      if (error.response.status && error.response.status === 401) {
+        // window.location.replace("/login");
+      }
+      return Promise.reject(error);
+    }
+  );
 
 const theme = extendTheme({
     colors: {
@@ -56,15 +114,8 @@ const theme = extendTheme({
 
 
 function MyApp({ Component, pageProps }) {
-    const [queryClient] = useState(() => new QueryClient({
-        defaultOptions: {
-            queries: {
-                refetchOnWindowFocus: false,
-            },
-        },
-    }));
     return (
-
+        <Provider store={store}>
         <MantineProvider
             withGlobalStyles
             withNormalizeCSS
@@ -74,12 +125,14 @@ function MyApp({ Component, pageProps }) {
             }}
         >
             <ChakraProvider theme={theme}>
+              <AuthProvider>
                 <QueryClientProvider client={queryClient}>
                     <Component {...pageProps} />
                 </QueryClientProvider>
-
+              </AuthProvider>
             </ChakraProvider>
         </MantineProvider>
+        </Provider>
     );
 }
 
