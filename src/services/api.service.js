@@ -16,6 +16,9 @@ const quizQueries = {
 const userQueries = {
     register: async (userData) => {
         return await axios.post(globalConstants.api + '/user/register', userData);
+    },
+    update: async (userData) => {
+        return await axios.patch(globalConstants.api + '/user/update', userData );
     }
 };
 

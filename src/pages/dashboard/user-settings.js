@@ -15,30 +15,56 @@ import {
 import * as yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
+import { useMutation } from "react-query";
+import { ApiService } from "@/services/api.service";
+import { useRouter } from "next/router";
+import { authValue } from "@/store/slices/auth";
+import { useSelector } from 'react-redux';
 
 const formSchema = yup.object().shape({
-    name: yup.string()
+    firstName: yup.string()
         .required("First name is required."),
-    surname: yup.string()
+    lastName: yup.string()
         .required("Last name is required."),
     email: yup.string()
         .required("Email is required.")
         .email("Invalid email format."),
-    birthDate: yup.string()
+    birthdate: yup.string()
         .required('Birthday is required.')
         .matches(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, 'Birthday must be a valid date in the format YYYY-MM-DD'),
 })
 
 const UserSettingsPage = ()=>{
+
+    const auth = useSelector(authValue);
+
     const {register, handleSubmit, formState: {errors}} = useForm({
         resolver: yupResolver(formSchema),
         defaultValues: {
-            name: "John",
-            surname: "Doe",
-            email: "john.doe@example.com",
-            birthDate: "2021-12-23"
+            firstName: auth?.user?.firstName,
+            lastName: auth?.user?.lastName,
+            email: auth?.user?.email,
+            birthdate: auth?.user?.birthdate
         }
     });
+
+    const router = useRouter();
+
+    const mutation = useMutation(async (data) => {
+        await ApiService.userQueries.update(data);
+    });
+
+    const onSubmit = data => {
+        data.confirmPassword = undefined;
+        const result = mutation.mutateAsync(data);
+        console.log(result);
+    };
+
+    if (mutation.isSuccess) {
+        router.replace('/');
+
+    }
+
     return(
         <StandardLayout>
             <DashboardArea title={"Kullanıcı Bilgilerini Düzenle"} description={"Kişisel bilgilerini bu sayfadan düzenleyebilirsin, bilgileri doğru girdiğinden emin ol!"}>
@@ -76,7 +102,8 @@ const UserSettingsPage = ()=>{
                             </FormControl>
 
                         </SimpleGrid>
-                        <Button alignSelf={"stretch"} colorScheme={"green"}>Save</Button>
+                        <Button onClick={handleSubmit((onSubmit))}
+                        alignSelf={"stretch"} colorScheme={"green"}>Save</Button>
                     </VStack>
                 </form>
             </DashboardArea>
