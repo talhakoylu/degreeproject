@@ -72,18 +72,18 @@ const UserSettingsPage = ()=>{
                     <VStack spacing={7} align={"stretch"}>
                         <SimpleGrid columns={{base: 1, md: 2}} spacing={6}>
 
-                            <FormControl id={"name"} isInvalid={errors.name}>
-                                <FormLabel htmlFor='name'>Name</FormLabel>
+                            <FormControl id={"firstName"} isInvalid={errors.firstName}>
+                                <FormLabel htmlFor='firstName'>Name</FormLabel>
                                 <Input variant='flushed' type='text'
-                                       placeholder={"John"} {...register("name")}/>
-                                <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
+                                       placeholder={"John"} {...register("firstName")}/>
+                                <FormErrorMessage>{errors.firstName && errors.firstName.message}</FormErrorMessage>
                             </FormControl>
 
-                            <FormControl id={"surname"} isInvalid={errors.surname}>
+                            <FormControl id={"lastName"} isInvalid={errors.lastName}>
                                 <FormLabel>Surname</FormLabel>
                                 <Input variant='flushed' placeholder="Doe"
-                                       type="text" {...register("surname")}/>
-                                <FormErrorMessage>{errors.surname && errors.surname.message}</FormErrorMessage>
+                                       type="text" {...register("lastName")}/>
+                                <FormErrorMessage>{errors.lastName && errors.lastName.message}</FormErrorMessage>
                             </FormControl>
 
                             <FormControl id={"email"} isInvalid={errors.email}>
@@ -94,11 +94,11 @@ const UserSettingsPage = ()=>{
                             </FormControl>
 
 
-                            <FormControl id={"birthDate"} isInvalid={errors.birthDate}>
-                                <FormLabel htmlFor='birthDate'>Birth Date</FormLabel>
+                            <FormControl id={"birthdate"} isInvalid={errors.birthdate}>
+                                <FormLabel htmlFor='birthdate'>Birth Date</FormLabel>
                                 <Input variant='flushed' type='date'
-                                       {...register("birthDate")}/>
-                                <FormErrorMessage>{errors.birthDate && errors.birthDate.message}</FormErrorMessage>
+                                       {...register("birthdate")}/>
+                                <FormErrorMessage>{errors.birthdate && errors.birthdate.message}</FormErrorMessage>
                             </FormControl>
 
                         </SimpleGrid>
