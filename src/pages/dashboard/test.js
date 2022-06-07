@@ -1,8 +1,8 @@
 
-function test(){
-    return (
-        <Dashb
+// function test(){
+//     return (
+//         <Dashb
 
-        //dogru acik desene mk
-    )
-}
+//         //dogru acik desene mk
+//     )
+// }

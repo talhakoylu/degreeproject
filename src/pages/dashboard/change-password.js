@@ -16,6 +16,11 @@ import {
     VStack
 } from "@chakra-ui/react";
 import {Link as NextLink} from "next/link";
+import { useMutation } from "react-query";
+import { ApiService } from "@/services/api.service";
+import { useRouter } from "next/router";
+import { authValue } from "@/store/slices/auth";
+import { useSelector } from 'react-redux';
 
 const formSchema = yup.object().shape({
     password: yup.string()
@@ -34,15 +39,32 @@ const formSchema = yup.object().shape({
     confirmPassword: yup.string()
         .required("Confirm password is required.")
         .oneOf([yup.ref('password')], "Password must match."),
-    oldPassword: yup.string()
-        .required("Old password is required.")
+    // oldPassword: yup.string()
+    //     .required("Old password is required.")
 })
 
 const ChangePasswordPage = ()=>{
     const {register, handleSubmit, formState: {errors}} = useForm({
         resolver: yupResolver(formSchema)
     });
-    const onSubmit = data => console.log(data);
+
+    const router = useRouter();
+
+    const mutation = useMutation(async (data) => {
+        await ApiService.userQueries.update(data);
+    });
+
+    const onSubmit = data => {
+        data.confirmPassword = undefined;
+        const result = mutation.mutateAsync(data);
+        console.log(result);
+    };
+
+    if (mutation.isSuccess) {
+        router.replace('/');
+
+    }
+
     return(
         <StandardLayout>
             <DashboardArea title={"Şifre Değiştirme"} description={"Bu sayfada şifrenizi güncelleyebilirsiniz."}>
@@ -51,7 +73,7 @@ const ChangePasswordPage = ()=>{
 
                         <SimpleGrid columns={1} spacing={6} maxW={"35%"}>
 
-                            <FormControl id={"oldPassword"} isInvalid={errors.oldPassword}>
+                            {/* <FormControl id={"oldPassword"} isInvalid={errors.oldPassword}>
                                 <FormLabel>Old Password</FormLabel>
                                 <Input variant='flushed' placeholder="************"
                                        type="password" {...register("oldPassword")}/>
@@ -59,7 +81,7 @@ const ChangePasswordPage = ()=>{
                                 <FormHelperText>
                                    Eski şifrenizi giriniz.
                                 </FormHelperText>
-                            </FormControl>
+                            </FormControl> */}
 
                             <FormControl id={"password"} isInvalid={errors.password}>
                                 <FormLabel>Password</FormLabel>
