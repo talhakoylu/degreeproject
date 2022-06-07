@@ -39,8 +39,8 @@ const formSchema = yup.object().shape({
     confirmPassword: yup.string()
         .required("Confirm password is required.")
         .oneOf([yup.ref('password')], "Password must match."),
-    // oldPassword: yup.string()
-    //     .required("Old password is required.")
+    oldPassword: yup.string()
+        .required("Old password is required.")
 })
 
 const ChangePasswordPage = ()=>{
@@ -73,7 +73,7 @@ const ChangePasswordPage = ()=>{
 
                         <SimpleGrid columns={1} spacing={6} maxW={"35%"}>
 
-                            {/* <FormControl id={"oldPassword"} isInvalid={errors.oldPassword}>
+                            <FormControl id={"oldPassword"} isInvalid={errors.oldPassword}>
                                 <FormLabel>Old Password</FormLabel>
                                 <Input variant='flushed' placeholder="************"
                                        type="password" {...register("oldPassword")}/>
@@ -81,7 +81,7 @@ const ChangePasswordPage = ()=>{
                                 <FormHelperText>
                                    Eski şifrenizi giriniz.
                                 </FormHelperText>
-                            </FormControl> */}
+                            </FormControl>
 
                             <FormControl id={"password"} isInvalid={errors.password}>
                                 <FormLabel>Password</FormLabel>
