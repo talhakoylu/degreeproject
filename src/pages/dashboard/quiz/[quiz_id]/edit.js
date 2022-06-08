@@ -30,8 +30,8 @@ const formSchema = yup.object().shape({
 
 const DashboardQuizEdit = () => {
   const router = useRouter();
-  const { quiz_id } = router.query;
-
+  const query = router.query;
+  console.log(query);
   const { control, register, handleSubmit, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(formSchema),
     defaultValues: {

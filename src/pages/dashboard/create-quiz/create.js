@@ -2,9 +2,12 @@ import StandardLayout from "../../../components/layouts/StandardLayout";
 import DashboardArea from "../../../components/DashboardArea";
 import * as yup from "yup";
 
-import {useForm, Controller} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
+    Alert,
+    AlertDescription,
+    AlertIcon,
     Button,
     Checkbox,
     FormControl,
@@ -17,6 +20,11 @@ import {
     VStack
 } from "@chakra-ui/react";
 import CustomRichText from "../../../components/RichText";
+import { useSelector } from "react-redux";
+import { authValue } from "@/store/slices/auth";
+import { useRouter } from "next/router";
+import { ApiService } from "@/services/api.service";
+import { useMutation, useQuery } from "react-query";
 
 const formSchema = yup.object().shape({
     title: yup.string()
@@ -29,90 +37,117 @@ const formSchema = yup.object().shape({
     category: yup.string()
         .required("Category is required."),
 
-})
+});
 
 
 const QuizCreatePage = () => {
 
-    const {control, register, handleSubmit, setValue, formState: {errors}} = useForm({
+    const auth = useSelector(authValue);
+    const { data, isSuccess, isError } = useQuery('getAllCategoriesForQuizCreate', async () => await ApiService.categoryQueries.getAllCategories(), {enabled: (auth.isReady && auth.user.isAdmin)});
+
+    const mutation = useMutation(async data => {
+        return await ApiService.quizQueries.createQuiz(data) 
+    })
+
+    const { control, register, handleSubmit, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(formSchema)
     });
-    const onSubmit = data => console.log(data);
+    const onSubmit = submitData => {
+        const {_id:categoryId, title, slug} = data.data.data.find(item => item._id === submitData.category)   
+        submitData.category = {
+            categoryId,
+            title,
+            slug
+        } 
+        submitData.image = submitData.coverImage[0];
+        mutation.mutateAsync(submitData).then(res => console.log(res))
+    };
+
+
 
     return (
         <StandardLayout>
             <DashboardArea title={"Quiz Oluşturma"}
-                           description={"Oluşturmak istediğiniz quiz için başlık, açıklama ve görsel ekleyin." +
-                           " Daha sonrasında oluşturduğunuz sınavı düzenle diyerek soru ekleyebilirsiniz."}
-            showGoBackButton={true}
+                description={"Oluşturmak istediğiniz quiz için başlık, açıklama ve görsel ekleyin." +
+                    " Daha sonrasında oluşturduğunuz sınavı düzenle diyerek soru ekleyebilirsiniz."}
+                showGoBackButton={true}
             >
-                <form>
-                    <VStack spacing={2} align={"stretch"}>
-                        <SimpleGrid columns={1} spacing={6}>
+                {
+                    auth.isReady && auth.user.isAdmin ? <form encType="multipart/form-data">
+                        <VStack spacing={2} align={"stretch"}>
+                            <SimpleGrid columns={1} spacing={6}>
 
 
 
-                            <FormControl id={"title"} isInvalid={errors.title}>
-                                <FormLabel>Quiz Title</FormLabel>
-                                <Input placeholder="Enter a title" type="text" {...register("title")}/>
-                                <FormErrorMessage>{errors.title && errors.title.message}</FormErrorMessage>
-                                <FormHelperText>
-                                    Sınavınız için bir başlık belirleyin.
-                                </FormHelperText>
-                            </FormControl>
+                                <FormControl id={"title"} isInvalid={errors.title}>
+                                    <FormLabel>Quiz Title</FormLabel>
+                                    <Input placeholder="Enter a title" type="text" {...register("title")} />
+                                    <FormErrorMessage>{errors.title && errors.title.message}</FormErrorMessage>
+                                    <FormHelperText>
+                                        Sınavınız için bir başlık belirleyin.
+                                    </FormHelperText>
+                                </FormControl>
 
-                            <FormControl id={"description"} isInvalid={errors.description}>
-                                <FormLabel>Description</FormLabel>
-                                <Controller
-                                    control={control}
-                                    name="description"
-                                    render={({ field: { onChange, onBlur, value, ref } }) => (
-                                        <CustomRichText
-                                            onChange={onChange}
-                                            onBlur={onBlur}
-                                            value={value}
-                                        />
-                                    )}
-                                />
-                                <FormErrorMessage>{errors.description && errors.description.message}</FormErrorMessage>
-                                <FormHelperText>
-                                    Write a description about this quiz you created.
-                                </FormHelperText>
-                            </FormControl>
+                                <FormControl id={"description"} isInvalid={errors.description}>
+                                    <FormLabel>Description</FormLabel>
+                                    <Controller
+                                        control={control}
+                                        name="description"
+                                        render={({ field: { onChange, onBlur, value, ref } }) => (
+                                            <CustomRichText
+                                                onChange={onChange}
+                                                onBlur={onBlur}
+                                                value={value}
+                                            />
+                                        )}
+                                    />
+                                    <FormErrorMessage>{errors.description && errors.description.message}</FormErrorMessage>
+                                    <FormHelperText>
+                                        Write a description about this quiz you created.
+                                    </FormHelperText>
+                                </FormControl>
 
-                            <FormControl id={"category"} isInvalid={errors.category}>
-                                <FormLabel>Category</FormLabel>
-                                <Select placeholder='Select a category' {...register("category")}>
-                                    <option value='1'>Category 1</option>
-                                    <option value='2'>Category 2</option>
-                                    <option value='3'>Category 3</option>
-                                </Select>
-                                <FormErrorMessage>{errors.category && errors.category.message}</FormErrorMessage>
-                                <FormHelperText>
-                                    Select a category to your quiz.
-                                </FormHelperText>
-                            </FormControl>
+                                <FormControl id={"category"} isInvalid={errors.category}>
+                                    <FormLabel>Category</FormLabel>
+                                    <Select placeholder='Select a category' {...register("category")}>
+                                        {/* <option value='1'>Category 1</option>
+                                        <option value='2'>Category 2</option>
+                                        <option value='3'>Category 3</option> */}
+                                        {isSuccess && data?.data?.data?.map((item, index) =>{
+                                            return <option key={index} value={item._id}>{item.title}</option>
+                                        })}
+                                    </Select>
+                                    <FormErrorMessage>{errors.category && errors.category.message}</FormErrorMessage>
+                                    <FormHelperText>
+                                        Select a category to your quiz.
+                                    </FormHelperText>
+                                </FormControl>
 
-                            <FormControl id={"coverImage"} isInvalid={errors.coverImage}>
-                                <FormLabel>Cover Image</FormLabel>
-                                <Input accept="image/jpeg, image/gif, image/png" pt={1} placeholder="Upload an image." type="file" {...register("coverImage")}/>
-                                <FormErrorMessage>{errors.coverImage && errors.coverImage.message}</FormErrorMessage>
-                                <FormHelperText>
-                                    Upload a cover image for your quiz. Remember, this is important to engage the user and must be relevant to the quiz.
-                                </FormHelperText>
-                            </FormControl>
-                        </SimpleGrid>
+                                <FormControl id={"coverImage"} isInvalid={errors.image}>
+                                    <FormLabel>Cover Image</FormLabel>
+                                    <Input accept="image/jpeg, image/gif, image/png" pt={1} placeholder="Upload an image." type="file" {...register("image")} />
+                                    <FormErrorMessage>{errors.image && errors.image.message}</FormErrorMessage>
+                                    <FormHelperText>
+                                        Upload a cover image for your quiz. Remember, this is important to engage the user and must be relevant to the quiz.
+                                    </FormHelperText>
+                                </FormControl>
+                            </SimpleGrid>
 
-                        <Button alignSelf={"end"} type={"submit"} onClick={handleSubmit((onSubmit))}
+                            <Button alignSelf={"end"} type={"submit"} onClick={handleSubmit((onSubmit))}
                                 justifySelf={"center"} colorScheme='blue' rounded={"3xl"}>
-                            Add a Quiz
-                        </Button>
-                    </VStack>
-                </form>
+                                Add a Quiz
+                            </Button>
+                        </VStack>
+                    </form> :
+                        <Alert status='error'>
+                            <AlertIcon />
+                            <AlertDescription>Bu işlem için yetkiniz bulunmamakta.</AlertDescription>
+                        </Alert>
+                }
 
             </DashboardArea>
         </StandardLayout>
-    )
-}
+    );
+};
 
-export default QuizCreatePage
+export default QuizCreatePage;
