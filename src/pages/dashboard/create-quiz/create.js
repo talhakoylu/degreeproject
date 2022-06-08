@@ -43,26 +43,38 @@ const formSchema = yup.object().shape({
 const QuizCreatePage = () => {
 
     const auth = useSelector(authValue);
-    const { data, isSuccess, isError } = useQuery('getAllCategoriesForQuizCreate', async () => await ApiService.categoryQueries.getAllCategories(), {enabled: (auth.isReady && auth.user.isAdmin)});
+    const router = useRouter();
+    const { data, isSuccess, isError } = useQuery('getAllCategoriesForQuizCreate', async () => await ApiService.categoryQueries.getAllCategories(), { enabled: (auth.isReady && auth.user.isAdmin) });
 
-    const mutation = useMutation(async data => {
-        return await ApiService.quizQueries.createQuiz(data) 
-    })
+    const quizMutation = useMutation(async data => {
+        return await ApiService.quizQueries.createQuiz(data);
+    });
+
+    const imageMutation = useMutation(async (data) => {
+        return await ApiService.quizQueries.addCoverImage(data.file, data.id);
+    });
 
     const { control, register, handleSubmit, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(formSchema)
     });
-    const onSubmit = submitData => {
-        const {_id:categoryId, title, slug} = data.data.data.find(item => item._id === submitData.category)   
+
+    const onSubmit = async submitData => {
+        const { _id: categoryId, title, slug } = data.data.data.find(item => item._id === submitData.category);
         submitData.category = {
             categoryId,
             title,
             slug
-        } 
-        submitData.image = submitData.coverImage[0];
-        mutation.mutateAsync(submitData).then(res => console.log(res))
+        };
+        const coverImage = new FormData();
+        coverImage.append('image', submitData.image[0])
+        submitData.image = undefined;
+        const result = await quizMutation.mutateAsync(submitData);
+        await imageMutation.mutateAsync({file: coverImage, id: result.data.data._id})
     };
 
+    if(quizMutation.isSuccess && imageMutation.isSuccess){
+        router.replace('/dashboard/create-quiz')
+    }
 
 
     return (
@@ -73,7 +85,7 @@ const QuizCreatePage = () => {
                 showGoBackButton={true}
             >
                 {
-                    auth.isReady && auth.user.isAdmin ? <form encType="multipart/form-data">
+                    auth.isReady && auth.user.isAdmin ? <form>
                         <VStack spacing={2} align={"stretch"}>
                             <SimpleGrid columns={1} spacing={6}>
 
@@ -113,8 +125,8 @@ const QuizCreatePage = () => {
                                         {/* <option value='1'>Category 1</option>
                                         <option value='2'>Category 2</option>
                                         <option value='3'>Category 3</option> */}
-                                        {isSuccess && data?.data?.data?.map((item, index) =>{
-                                            return <option key={index} value={item._id}>{item.title}</option>
+                                        {isSuccess && data?.data?.data?.map((item, index) => {
+                                            return <option key={index} value={item._id}>{item.title}</option>;
                                         })}
                                     </Select>
                                     <FormErrorMessage>{errors.category && errors.category.message}</FormErrorMessage>

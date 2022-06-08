@@ -21,7 +21,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { authValue } from "@/store/slices/auth";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { ApiService } from "@/services/api.service";
 
 
@@ -31,6 +31,8 @@ const CreateQuiz = () => {
     const { data: data2, isSuccess, isError } = useQuery('createdQuizzesByUser', async () => {
         return await ApiService.quizQueries.getAllQuizzesByUserId();
     }, { enabled: (auth?.isReady && auth?.user?.isAdmin) });
+
+    const removeQuiz = useMutation(async id => await ApiService.quizQueries.removeQuiz(id))
 
     if (isSuccess) {
         console.log(data2.data.data);
@@ -49,8 +51,6 @@ const CreateQuiz = () => {
         };
     }), [data2]
     );
-
-
 
     const columns = React.useMemo(
         () => [

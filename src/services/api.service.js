@@ -15,11 +15,17 @@ const quizQueries = {
         return await axios.get(globalConstants.api + '/quiz/find-all-quizzes-of-user');
     },
     createQuiz: async (data) => {
-        return await axios.post(globalConstants.api + '/quiz-admin/add-quiz', data, {
+        return await axios.post(globalConstants.api + '/quiz-admin/add-quiz', data);
+    },
+    addCoverImage: async (data, id) => {
+        return await axios.patch(globalConstants.api + '/quiz-admin/update-quiz/' + id, data, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             }
         });
+    },
+    removeQuiz: async(id) => {
+        return await axios.delete(globalConstants.api + '/quiz-admin/' + id);
     }
 };
 

@@ -124,8 +124,7 @@ export default function QuizDetailPage() {
                                                     paddingLeft: "2.5rem"
                                                 },
                                             }}>
-
-                                                {data.description}
+                                                <div dangerouslySetInnerHTML={{ __html: data.description }}></div>
                                             </TabPanel>
 
                                             <TabPanel>

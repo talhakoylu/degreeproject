@@ -63,7 +63,7 @@ const UserSettingsPage = () => {
             email: auth?.user?.email,
             birthdate: auth?.user?.birthdate?.substring(0, 10)
         });
-    }, [auth?.user]);
+    }, [auth?.user, reset]);
 
 
     return (
