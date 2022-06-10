@@ -49,7 +49,7 @@ const CreateQuiz = () => {
                 remove: "/remove"
             }
         };
-    }), [data2]
+    }), [data2?.data]
     );
 
     const columns = React.useMemo(
@@ -89,7 +89,7 @@ const CreateQuiz = () => {
                 )
             }
         ],
-        []
+        [router]
     );
 
     return (

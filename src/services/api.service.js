@@ -24,8 +24,14 @@ const quizQueries = {
             }
         });
     },
-    removeQuiz: async(id) => {
+    removeQuiz: async (id) => {
         return await axios.delete(globalConstants.api + '/quiz-admin/' + id);
+    },
+    updateQuiz: async (id, data) => {
+        return await axios.patch(globalConstants.api + '/quiz-admin/update-quiz/' + id, data)
+    },
+    getQuizDetailById: async(id) => {
+        return await axios.get(globalConstants.api + '/quiz/' + id)
     }
 };
 

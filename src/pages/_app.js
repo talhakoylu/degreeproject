@@ -39,8 +39,9 @@ export const queryClient = new QueryClient({
             toast({
               description: response?.data?.message,
               status: 'success',
-              duration: 4000,
+              duration: 2500,
               isClosable: true,
+              position: 'top-right'
             });
         }
         
@@ -52,8 +53,9 @@ export const queryClient = new QueryClient({
               title: error?.response?.data?.errorName,
               description: error?.response?.data?.message,
               status: 'error',
-              duration: 4000,
+              duration: 2500,
               isClosable: true,
+              position: 'top-right'
             });
         }
 
