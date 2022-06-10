@@ -32,7 +32,7 @@ const CreateQuiz = () => {
         return await ApiService.quizQueries.getAllQuizzesByUserId();
     }, { enabled: (auth?.isReady && auth?.user?.isAdmin) });
 
-    const removeQuiz = useMutation(async id => await ApiService.quizQueries.removeQuiz(id))
+    const removeQuiz = useMutation(async id => await ApiService.quizQueries.removeQuiz(id));
 
     if (isSuccess) {
         console.log(data2.data.data);
@@ -40,9 +40,9 @@ const CreateQuiz = () => {
 
     const data = React.useMemo(() => data2?.data?.data?.map((item, index) => {
         return {
-            id: index + 1,
             col1: item.title,
             col2: item.category.title,
+            createdAt: new Date(item.createdAt).toUTCString(),
             manage: {
                 itemId: item._id,
                 edit: "/edit",
@@ -54,20 +54,21 @@ const CreateQuiz = () => {
 
     const columns = React.useMemo(
         () => [
-            {
-                Header: "#",
-                accessor: 'id',
-                width: 10
-            },
+
             {
                 Header: 'Quiz Title',
                 accessor: 'col1',
-                width: 45
+                width: 35
             },
             {
                 Header: 'Category',
                 accessor: 'col2',
                 width: 30
+            },
+            {
+                Header: "Created At",
+                accessor: 'createdAt',
+                width: 20
             },
             {
                 Header: "Manage",
