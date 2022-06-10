@@ -25,6 +25,7 @@ import { authValue } from "@/store/slices/auth";
 import { useRouter } from "next/router";
 import { ApiService } from "@/services/api.service";
 import { useMutation, useQuery } from "react-query";
+import { useState } from "react";
 
 const formSchema = yup.object().shape({
     title: yup.string()
@@ -33,7 +34,7 @@ const formSchema = yup.object().shape({
         .max(255, "Title can be up to 255 characters."),
     description: yup.string()
         .required("Description is required.")
-        .min(30, "Description must be at least 30 characters!"),
+        .min(50, "Description must be at least 30 characters!"),
     category: yup.string()
         .required("Category is required."),
 
@@ -44,6 +45,7 @@ const QuizCreatePage = () => {
 
     const auth = useSelector(authValue);
     const router = useRouter();
+    const [imageExists, setImageExists] = useState(false);
     const { data, isSuccess, isError } = useQuery('getAllCategoriesForQuizCreate', async () => await ApiService.categoryQueries.getAllCategories(), { enabled: (auth.isReady && auth.user.isAdmin) });
 
     const quizMutation = useMutation(async data => {
@@ -65,15 +67,26 @@ const QuizCreatePage = () => {
             title,
             slug
         };
+        const imageFilesLength = submitData.image.length
         const coverImage = new FormData();
-        coverImage.append('image', submitData.image[0])
-        submitData.image = undefined;
+        if ( imageFilesLength > 0) {
+            coverImage.append('image', submitData.image[0]);
+            setImageExists(true)
+        }
+        delete submitData.image;
+
         const result = await quizMutation.mutateAsync(submitData);
-        await imageMutation.mutateAsync({file: coverImage, id: result.data.data._id})
+        if (imageFilesLength > 0) {
+            await imageMutation.mutateAsync({ file: coverImage, id: result.data.data._id });
+        }
     };
 
-    if(quizMutation.isSuccess && imageMutation.isSuccess){
-        router.replace('/dashboard/create-quiz')
+    if (imageExists) {
+        if(quizMutation.isSuccess && imageMutation.isSuccess){
+            router.replace('/dashboard/create-quiz');
+        }
+    }else if(quizMutation.isSuccess){
+        router.replace('/dashboard/create-quiz');
     }
 
 

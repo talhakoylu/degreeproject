@@ -95,7 +95,7 @@ const DashboardQuizEdit = () => {
               {
                 cell.row.values.manage.edit &&
                 <IconButton colorScheme='purple' aria-label='Edit Content' icon={<MdOutlineModeEditOutline />}
-                  onClick={() => router.push(`/dashboard/quiz/${quiz_id}/questions/${cell.row.values.id}/edit`)}
+                  onClick={() => router.push(`/dashboard/quiz/${query?.quiz_id}/questions/${cell.row.values.id}/edit`)}
                 />
               }
               {cell.row.values.manage.remove &&
@@ -175,7 +175,7 @@ const DashboardQuizEdit = () => {
 
             {/* Add question tab */}
             <TabPanel px={0}>
-              <Button my={4} isFullWidth colorScheme={"blue"} onClick={() => router.push(`/dashboard/quiz/${quiz_id}/questions/add`)}>Soru Ekle</Button>
+              <Button my={4} isFullWidth colorScheme={"blue"} onClick={() => router.push(`/dashboard/quiz/${query?.quiz_id}/questions/add`)}>Soru Ekle</Button>
               <CustomTable mt={4} data={data} columns={columns} sx={{
                 overflowX: "auto"
               }} />

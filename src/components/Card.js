@@ -27,7 +27,7 @@ export default function Card({ title, description, image, path, minHeight = 400,
                             <VStack spacing={2} align={"start"} flex={1}>
                                 <Text fontSize='2xl' fontWeight={"semibold"} lineHeight={"1.6rem"}>{cardTitle}</Text>
 
-                                <Text textAlign={"justify"}><div dangerouslySetInnerHTML={{__html: description}}></div></Text>
+                                <div dangerouslySetInnerHTML={{__html: description}}></div>
                             </VStack>
 
                             {path && <Button width={"full"} onClick={() => router.push(path)}>Teste Git</Button>}
