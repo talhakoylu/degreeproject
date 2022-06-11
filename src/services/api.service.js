@@ -58,7 +58,10 @@ const userQueries = {
 
 const gameQueries = {
     createGame: async (quizId, data) => {
-        return await axios.post(globalConstants.api + '/game/create-game/' + quizId, data)
+        return await axios.post(globalConstants.api + '/game/create-game/' + quizId, data);
+    },
+    findGameWithKey: async (gameKey) => {
+        return await axios.get(globalConstants.api + '/game/find-game-with-key/' + gameKey);
     }
 }
 
