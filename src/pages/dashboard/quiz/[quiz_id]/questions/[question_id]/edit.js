@@ -1,116 +1,139 @@
 import DashboardArea from "@/components/DashboardArea";
 import StandardLayout from "@/components/layouts/StandardLayout";
 import CustomRichText from "@/components/RichText";
-import { Button, Checkbox, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Input, Stack, Textarea, VStack } from "@chakra-ui/react";
+import { ApiService } from "@/services/api.service";
+import { Alert, AlertDescription, AlertIcon, Button, Checkbox, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Input, Radio, RadioGroup, Stack, Textarea, VStack } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useMutation, useQuery } from "react-query";
 import * as yup from "yup";
 
 const formSchema = yup.object().shape({
-    question: yup.string()
+    questionText: yup.string()
         .required("Question is required.")
         .min(30, "Question must be at least 30 characters!"),
     answer1: yup.string()
-        .required("Answer 1 is required. Because you must add at least 1 answer.")
-})
+        .required("Answer 1 is required."),
+    answer2: yup.string()
+        .required("Answer 2 is required.")
+});
 
 export default function EditQuestionPage() {
     const router = useRouter();
-    const {quiz_id, question_id} = router.query;
+    const { quiz_id, question_id } = router.query;
 
-    const { control, register, handleSubmit, formState: { errors } } = useForm({
+    const { getValues, setValue, watch, control, register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(formSchema),
-        defaultValues: {
-            question: "Lorem ipsum dolor sit amet.",
-            answer1: "Answer 1 example question text",
-            answer1IsTrue: false,
-            answer2: "Answer 2 example question text. This answer is longer than answer 1. Also this is a correct answer :)",
-            answer2IsTrue: true,
-            answer3: "Answer 3 example question text with lorem ipsum",
-            answer3IsTrue: false,
-            answer4: "Answer 4 example question text. A question can have more than one correct answer.",
-            answer4IsTrue: true,
-        }
     });
-    const onSubmit = data => console.log(`${quiz_id}, ${question_id}, ${data}`);
+
+    const questionQuery = useQuery('findQuestionById', async () => await ApiService.quizQueries.findQuestion(quiz_id, question_id), { enabled: router.isReady });
+    const updateMutation = useMutation(async data => await ApiService.quizQueries.updateQuestion(data.quizId, data.questionId, data.data))
+
+    useEffect(() => {
+        if (questionQuery.isSuccess) {
+            reset({
+                questionText: questionQuery?.data?.data?.data?.questionText,
+                answer1: questionQuery?.data?.data?.data?.answer1,
+                answer2: questionQuery?.data?.data?.data?.answer2,
+                answer3: questionQuery?.data?.data?.data?.answer3,
+                answer4: questionQuery?.data?.data?.data?.answer4,
+                correctAnswer: questionQuery?.data?.data?.data?.correctAnswer,
+            });
+        }
+
+    }, [questionQuery.isSuccess, questionQuery?.data?.data?.data, reset]);
+    
+    const onSubmit = async data => {
+        Object.keys(data).forEach(key => {
+            if (data[key] === '' || data[key] == null) {
+                delete data[key];
+            }
+        });
+
+        await updateMutation.mutateAsync({quizId: quiz_id, questionId: question_id, data})
+    };
+
+    if (updateMutation.isSuccess) {
+        router.push(`/dashboard/quiz/${quiz_id}/edit`)
+    }
     return (
         <StandardLayout>
             <DashboardArea title={"Soru Düzenle"} description={"Bu sayfadan eklemiş olduğunuz bir soruyu düzenleyebilirsiniz."} showGoBackButton>
-                <form>
-                    <VStack spacing={4} align={"stretch"}>
-                        <FormControl id={"question"} isInvalid={errors.question}>
-                            <FormLabel>Question</FormLabel>
+                {questionQuery.isSuccess ?
+                    <form>
+                        <VStack spacing={4} align={"stretch"}>
+                            <FormControl id={"questionText"} isInvalid={errors.questionText}>
+                                <FormLabel>Question</FormLabel>
+                                <Controller
+                                    control={control}
+                                    name="questionText"
+                                    render={({ field: { onChange, onBlur, value, ref } }) => (
+                                        <CustomRichText
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            value={value}
+                                        />
+                                    )}
+                                />
+                                <FormErrorMessage>{errors.questionText && errors.questionText.message}</FormErrorMessage>
+                            </FormControl>
+
                             <Controller
                                 control={control}
-                                name="question"
-                                render={({ field: { onChange, onBlur, value, ref } }) => (
-                                    <CustomRichText
+                                name="correctAnswer"
+                                render={({
+                                    field: { onChange, onBlur, value, name, ref },
+                                    fieldState: { invalid, isTouched, isDirty, error },
+                                    formState,
+                                }) => (
+                                    <RadioGroup
                                         onChange={onChange}
-                                        onBlur={onBlur}
                                         value={value}
-                                    />
+                                    >
+                                        {["1", "2", "3", "4"].map((answerNumber, k) => {
+                                            return (
+                                                <Stack key={k} direction={{ base: "column", md: "row" }}>
+                                                    <FormControl id={`answer${answerNumber}`} isInvalid={errors[`answer${answerNumber}`]}>
+                                                        <FormLabel>Answer {answerNumber}</FormLabel>
+                                                        <Textarea placeholder="Answer text" type="text" {...register(`answer${answerNumber}`, {
+                                                            onChange: (e) => {
+                                                                const correctAnswer = getValues('correctAnswer');
+                                                                if (!e.target.value && correctAnswer === answerNumber) {
+                                                                    setValue('correctAnswer', null);
+                                                                }
+                                                            }
+                                                        })} />
+                                                        <FormErrorMessage >{errors[`answer${answerNumber}`] && errors[`answer${answerNumber}`].message}</FormErrorMessage>
+                                                    </FormControl>
+                                                    <FormControl id={`answerCorrectLabel${answerNumber}`} maxW={{ base: "100%", md: "40%" }} isInvalid={errors.correctAnswer}>
+                                                        <FormLabel>Is answer {answerNumber} is a correct answer?</FormLabel>
+                                                        <Radio name={answerNumber} id={`answerCorrect${answerNumber}`} value={answerNumber} isDisabled={watch(`answer${answerNumber}`) ? false : true} {...register('correctAnswer')}>Check this box if this is a correct answer.</Radio>
+                                                        <FormErrorMessage>{errors[`correctAnswer`] && errors[`correctAnswer`].message}</FormErrorMessage>
+                                                    </FormControl>
+                                                </Stack>
+                                            );
+                                        })}
+                                    </RadioGroup>
                                 )}
                             />
-                            <FormErrorMessage>{errors.question && errors.question.message}</FormErrorMessage>
-                        </FormControl>
 
-                        <Stack direction={{ base: "column", md: "row" }}>
-                            <FormControl id={"answer1"} isInvalid={errors.answer1}>
-                                <FormLabel>Answer 1</FormLabel>
-                                <Textarea placeholder="Answer text" type="text" {...register("answer1")} />
-                                <FormErrorMessage>{errors.answer1 && errors.answer1.message}</FormErrorMessage>
-                            </FormControl>
-                            <FormControl id={"answer1IsTrue"} isInvalid={errors.answer1IsTrue} maxW={{ base: "100%", md: "40%" }}>
-                                <FormLabel>Is answer 1 is a correct answer?</FormLabel>
-                                <Checkbox {...register("answer1IsTrue")}>Check this box if this is a correct answer.</Checkbox>
-                                <FormErrorMessage>{errors.answer1IsTrue && errors.answer1IsTrue.message}</FormErrorMessage>
-                            </FormControl>
-                        </Stack>
+                            <Button isDisabled={!router.isReady} isFullWidth colorScheme={"purple"} type={"submit"} onClick={handleSubmit((onSubmit))}>Update</Button>
+                        </VStack>
+                    </form> :
+                    questionQuery.isError ?
+                        <Alert status='error'>
+                            <AlertIcon />
+                            <AlertDescription>Bir hata meydana geldi.</AlertDescription>
+                        </Alert> :
+                        <Alert status='warning'>
+                            <AlertIcon />
+                            <AlertDescription>Sayfa kontrol ediliyor.</AlertDescription>
+                        </Alert>
 
-                        <Stack direction={{ base: "column", md: "row" }}>
-                            <FormControl id={"answer2"} isInvalid={errors.answer2}>
-                                <FormLabel>Answer 2</FormLabel>
-                                <Textarea placeholder="Answer text" type="text" {...register("answer2")} />
-                                <FormErrorMessage>{errors.answer2 && errors.answer2.message}</FormErrorMessage>
-                            </FormControl>
-                            <FormControl id={"answer2IsTrue"} isInvalid={errors.answer2IsTrue} maxW={{ base: "100%", md: "40%" }}>
-                                <FormLabel>Is answer 2 is a correct answer?</FormLabel>
-                                <Checkbox {...register("answer2IsTrue")}>Check this box if this is a correct answer.</Checkbox>
-                                <FormErrorMessage>{errors.answer2IsTrue && errors.answer2IsTrue.message}</FormErrorMessage>
-                            </FormControl>
-                        </Stack>
-
-                        <Stack direction={{ base: "column", md: "row" }}>
-                            <FormControl id={"answer3"} isInvalid={errors.answer3}>
-                                <FormLabel>Answer 3</FormLabel>
-                                <Textarea placeholder="Answer text" type="text" {...register("answer3")} />
-                                <FormErrorMessage>{errors.answer3 && errors.answer3.message}</FormErrorMessage>
-                            </FormControl>
-                            <FormControl id={"answer3IsTrue"} isInvalid={errors.answer3IsTrue} maxW={{ base: "100%", md: "40%" }}>
-                                <FormLabel>Is answer 3 is a correct answer?</FormLabel>
-                                <Checkbox {...register("answer3IsTrue")}>Check this box if this is a correct answer.</Checkbox>
-                                <FormErrorMessage>{errors.answer3IsTrue && errors.answer3IsTrue.message}</FormErrorMessage>
-                            </FormControl>
-                        </Stack>
-
-                        <Stack direction={{ base: "column", md: "row" }}>
-                            <FormControl id={"answer4"} isInvalid={errors.answer4}>
-                                <FormLabel>Answer 4</FormLabel>
-                                <Textarea placeholder="Answer text" type="text" {...register("answer4")} />
-                                <FormErrorMessage>{errors.answer4 && errors.answer4.message}</FormErrorMessage>
-                            </FormControl>
-                            <FormControl id={"answer4IsTrue"} isInvalid={errors.answer4IsTrue} maxW={{ base: "100%", md: "40%" }}>
-                                <FormLabel>Is answer 4 is a correct answer?</FormLabel>
-                                <Checkbox {...register("answer4IsTrue")}>Check this box if this is a correct answer.</Checkbox>
-                                <FormErrorMessage>{errors.answer4IsTrue && errors.answer4IsTrue.message}</FormErrorMessage>
-                            </FormControl>
-                        </Stack>
-
-                        <Button isFullWidth colorScheme={"purple"} type={"submit"} onClick={handleSubmit((onSubmit))}>Update</Button>
-                    </VStack>
-                </form>
+                }
             </DashboardArea>
         </StandardLayout>
-    )
+    );
 }

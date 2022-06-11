@@ -33,8 +33,14 @@ const quizQueries = {
     getQuizDetailById: async (id) => {
         return await axios.get(globalConstants.api + '/quiz/' + id);
     },
-    addQuestion: async(quizId, data) => {
-        return await axios.post(globalConstants.api + '/quiz-admin/add-question/' + quizId, data)
+    addQuestion: async (quizId, data) => {
+        return await axios.post(globalConstants.api + '/quiz-admin/add-question/' + quizId, data);
+    },
+    findQuestion: async (quizId, questionId) => {
+        return await axios.get(globalConstants.api + '/quiz-admin/find-question/' + quizId + '/' + questionId);
+    },
+    updateQuestion: async(quizId, questionId, data) => {
+        return await axios.patch(globalConstants.api + '/quiz-admin/update-question/' + quizId + '/' + questionId, data);
     }
 };
 
