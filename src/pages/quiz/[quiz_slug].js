@@ -18,30 +18,30 @@ const questionItem = (item, index) => {
             <VStack align={"stretch"}>
                 <HStack backgroundColor={"orange.100"} px={4} py={2} rounded={"md"}>
                     <Text width={"10%"} textColor={"red.800"} fontWeight={600}>Question {index + 1}</Text>
-                    <Text width={"90%"} textColor={"gray.700"} fontWeight={500}>{item.questionText}</Text>
+                    <Text width={"90%"} as={"div"} textColor={"gray.700"} fontWeight={500}><div dangerouslySetInnerHTML={{__html: item.questionText}}></div></Text>
                 </HStack>
-                {item.firstChoiceText && <Box>
+                {item.answer1 && <Box>
                     <HStack backgroundColor={"gray.100"} mx={5} px={4} py={2} rounded={"md"}>
                         <Text width={"10%"} textColor={"gray.800"} fontWeight={600}>Answer 1</Text>
-                        <Text width={"90%"} textColor={"gray.700"} fontWeight={500}>{item.firstChoiceText}</Text>
+                        <Text width={"90%"} textColor={"gray.700"} fontWeight={500}>{item.answer1}</Text>
                     </HStack>
                 </Box>}
-                {item.secondChoiceText && <Box>
+                {item.answer2 && <Box>
                     <HStack backgroundColor={"gray.100"} mx={5} px={4} py={2} rounded={"md"}>
                         <Text width={"10%"} textColor={"gray.800"} fontWeight={600}>Answer 2</Text>
-                        <Text width={"90%"} textColor={"gray.700"} fontWeight={500}>{item.secondChoiceText}</Text>
+                        <Text width={"90%"} textColor={"gray.700"} fontWeight={500}>{item.answer2}</Text>
                     </HStack>
                 </Box>}
-                {item.thirdChoiceText && <Box>
+                {item.answer3 && <Box>
                     <HStack backgroundColor={"gray.100"} mx={5} px={4} py={2} rounded={"md"}>
                         <Text width={"10%"} textColor={"gray.800"} fontWeight={600}>Answer 3</Text>
-                        <Text width={"90%"} textColor={"gray.700"} fontWeight={500}>{item.thirdChoiceText}</Text>
+                        <Text width={"90%"} textColor={"gray.700"} fontWeight={500}>{item.answer3}</Text>
                     </HStack>
                 </Box>}
-                {item.fourthChoiceText && <Box>
+                {item.answer4 && <Box>
                     <HStack backgroundColor={"gray.100"} mx={5} px={4} py={2} rounded={"md"}>
                         <Text width={"10%"} textColor={"gray.800"} fontWeight={600}>Answer 4</Text>
-                        <Text width={"90%"} textColor={"gray.700"} fontWeight={500}>{item.fourthChoiceText}</Text>
+                        <Text width={"90%"} textColor={"gray.700"} fontWeight={500}>{item.answer4}</Text>
                     </HStack>
                 </Box>}
 
@@ -141,7 +141,7 @@ export default function QuizDetailPage() {
 
                         <VStack width={{ base: "100%", md: "25%" }} align={"flex-start"} >
 
-                            <Image src="/assets/images/3.jpg" borderRadius={"md"} boxSize={"100%"} height={"180px"} objectFit={"cover"} alt="Quiz Cover Image" />
+                            <Image src={`http://localhost:8080/${data.coverImage}`} borderRadius={"md"} boxSize={"100%"} height={"180px"} objectFit={"fill"} alt="Quiz Cover Image" />
 
                             <SidebarBox title={"Bir Oyun Oluştur"} description={"Bu sınava ait sorulardan oluşan bir oyun oluşturabilirsiniz."} buttonOnClick={() => router.push("/")} buttonText={"Oyun Oluştur"} icon={<VscDebugStart />} />
                             <SidebarBox title={"Bu Sınavı Bildir"} description={"Bu sınavın içeriğinden bağımsız olduğunu, kuralları ihlal ettiğini ve sistemde bulunmaması gerektiğini düşünüyorsan bunu bize bildirebilirsin."} buttonText={"Bildir!"} buttonIconBackgroundHover={"red.500"} buttonIconBackground={"red.300"} buttonOnClick={() => router.push("/")} icon={<VscReport />} />

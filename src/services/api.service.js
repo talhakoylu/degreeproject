@@ -41,6 +41,9 @@ const quizQueries = {
     },
     updateQuestion: async(quizId, questionId, data) => {
         return await axios.patch(globalConstants.api + '/quiz-admin/update-question/' + quizId + '/' + questionId, data);
+    },
+    getAllQuizzesByCategorySlug: async (slug) =>  {
+        return await axios.get(globalConstants.api + '/quiz/get-quizzes-by-category-slug/' + slug)
     }
 };
 
