@@ -6,105 +6,65 @@ import { useForm } from "react-hook-form";
 import * as yup from 'yup';
 import { keyframes } from "@emotion/react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useMutation } from "react-query";
+import { ApiService } from "@/services/api.service";
 
 const formSchema = yup.object().shape({
     gameStart: yup.string()
-    .required('Game start time is required.')
-    .test(
-        'not empty',
-        'Starting time can not be empty',
-        function(value) {
-            return !!value;
-        }
-    )
-    .test(
-        "gameStartTest",
-        "Starting time must be before end time",
-        function(value){
-            const {gameEnd} = this.parent;
-            return isSameOrBefore(value, end_time);
-        }
-    ),
+        .required('Game start time is required.'),
     gameEnd: yup.string()
-        .required('Game end time is required.'),
-})
+        .required('Game end time is required.')
+});
 
-const isSameOrBefore = (gameStart, gameEnd) => {
-    return moment(gameStart, 'HH:mm').isSameOrBefore(moment(gameEnd, 'HH:mm'));
-  }
 
 const gradient = keyframes`
     0% { background-position: 0% 50%; },
     50% {background-position: 100% 50%;},
     100% {background-position: 0% 50%;},
-`
+`;
 
 export default function CreateGamePage() {
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(formSchema)
     });
+    const [gameKey, setGameKey] = useState({gameKey: 'The key will appear here', gameKeyGenerated: false})
+    const router = useRouter();
+    const createGameMutation = useMutation(async data => await ApiService.gameQueries.createGame(data.quizId, data.data))
 
-    
-    // const [participants, setParticipants] = useState([]);
-  
-    //   const [count, setCount] = useState(0);
-
-    // useEffect(() => {
-    //     let counter = count;
-    //     const interval = setInterval(() => {
-    //     if (counter >= 300) {
-    //         clearInterval(interval);
-    //     } else {
-    //         setParticipants([{
-    //             name: NameData[Math.floor(Math.random() * 125)].Torrin
-    //         }, ...participants])
-    //         setCount(count => count + 1);
-    //         counter++; // local variable that this closure will see
-    //     }
-    //     }, Math.floor(Math.random() * 1000 ));
-    //     return () => clearInterval(interval); 
-    // }, [participants]);
-
-    // console.log(participants)
+    const onSubmit = async data => {
+        if(router.isReady){
+            await createGameMutation.mutateAsync({quizId: router.query.quiz_id, data}).then(res => setGameKey({gameKey: res.data.data.uniqueGameKey, gameKeyGenerated: true}))
+        }
+    };
 
     return (
         <FullScreenLayout backgroundColor={"gray.700"} justifyContent={"flex-start"} alignItems={"center"}>
             <VStack minHeight={"100vh"} height={"100%"} justifyContent={"center"}>
-                
-                <Box backgroundColor={"gray.700"} color={"white"} width={{ base: "80vw", md: "30vw" }} px={8} py={8} position={"relative"} overflow={"hidden"} rounded={"md"}>
-                <VStack direction={{ base: "column", md: "row" }}>
+                <form>
+                    <Box backgroundColor={"gray.700"} color={"white"} width={{ base: "80vw", md: "40vw" }} px={8} py={8} position={"relative"} overflow={"hidden"} rounded={"md"}>
+                        <VStack direction={{ base: "column", md: "row" }}>
 
-                    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={12}>
-                    <FormControl id={"gameStart"} isInvalid={errors.gameStart}>
-                                <FormLabel htmlFor='gameStart'>Game Start Date</FormLabel>
-                                <Input variant='flushed' type='date'
-                                    {...register("gameStart")} />
-                                <FormErrorMessage>{errors.gameStart && errors.gameStart.message}</FormErrorMessage>
-                            </FormControl>
-                    <FormControl id={"gameStart"} isInvalid={errors.gameStart}>
-                                <FormLabel htmlFor="gameStart">Game Start Hour</FormLabel>
-                                <Input variant='flushed' type='datetime-local' 
-                                    {...register("gameStart")}/>
-                                <FormErrorMessage>{errors.gameStart && errors.gameStart.message}</FormErrorMessage>
-                            </FormControl>
-                    <FormControl id={"gameEnd"} isInvalid={errors.gameEnd} >
-                                <FormLabel htmlFor='gameEnd'>Game End Date</FormLabel>
-                                <Input variant='flushed' type='date'
-                                    {...register("gameEnd")} />
-                                <FormErrorMessage>{errors.gameEnd && errors.gameEnd.message}</FormErrorMessage>
-                            </FormControl> 
-                            <FormControl id={"gameEnd"} isInvalid={errors.gameEnd}>
-                                <FormLabel htmlFor="gameEnd">Game End Hour</FormLabel>
-                                <Input variant='flushed' type='datetime-local' 
-                                    {...register("gameEnd")}/>
-                                <FormErrorMessage>{errors.gameEnd && errors.gameEnd.message}</FormErrorMessage>
-                            </FormControl>
-                    </SimpleGrid>
-                    </VStack>
-                    <HStack align={"center"} justify={"center"} marginTop={4} paddingY={6}>
-                        <Button position={{ md: "absolute" }} colorScheme={"orange"} align={"center"} justify={"center"} rounded={"md"} marginTop={6} paddingX={10} paddingY={6}>Genarate the Game Key</Button>
-                    </HStack>  
-                </Box>
+                            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={12}>
+                                <FormControl id={"gameStart"} isInvalid={errors.gameStart}>
+                                    <FormLabel htmlFor='gameStart'>Game Start Date</FormLabel>
+                                    <Input variant='flushed' type='datetime-local'
+                                        {...register("gameStart")} />
+                                    <FormErrorMessage>{errors.gameStart && errors.gameStart.message}</FormErrorMessage>
+                                </FormControl>
+                                <FormControl id={"gameEnd"} isInvalid={errors.gameEnd}>
+                                    <FormLabel htmlFor="gameEnd">Game End Date</FormLabel>
+                                    <Input variant='flushed' type='datetime-local'
+                                        {...register("gameEnd")} />
+                                    <FormErrorMessage>{errors.gameEnd && errors.gameEnd.message}</FormErrorMessage>
+                                </FormControl>
+                            </SimpleGrid>
+                        </VStack>
+                        <HStack align={"center"} justify={"center"} marginTop={4} paddingY={6}>
+                            <Button position={{ md: "absolute" }} type="submit" colorScheme={"orange"} rounded={"md"} marginTop={6} paddingX={6} paddingY={6} onClick={handleSubmit(onSubmit)} isDisabled={gameKey.gameKeyGenerated}>Genarate the Game Key</Button>
+                        </HStack>
+                    </Box>
+                </form>
                 <VStack height={"15vh"} minWidth={"100%"} align={"center"} justify={"center"} py={4}>
                     <Heading size={"lg"} as="h3" textColor={"white"}>Game Key</Heading>
                     <Box sx={{
@@ -115,12 +75,11 @@ export default function CreateGamePage() {
                         fontWeight: 500,
                         fontSize: "1.5rem",
                         borderRadius: "md",
-                    }} px={8} py={4}>123-Q2-22</Box>
+                    }} px={8} py={4}>{gameKey.gameKey}</Box>
                 </VStack>
                 <VStack>
-                <Button position={{ md: "absolute" }} colorScheme={"orange"} align={"center"} justify={"center"} rounded={"md"} paddingX={16} paddingY={6}>Start</Button>
                 </VStack>
             </VStack>
         </FullScreenLayout>
-    )
+    );
 }

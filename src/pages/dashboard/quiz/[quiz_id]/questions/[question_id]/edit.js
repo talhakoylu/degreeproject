@@ -17,7 +17,10 @@ const formSchema = yup.object().shape({
     answer1: yup.string()
         .required("Answer 1 is required."),
     answer2: yup.string()
-        .required("Answer 2 is required.")
+        .required("Answer 2 is required."),
+    timer: yup.number()
+        .required("Timer is required.")
+        .min(10, "Minimum time could be at least 10 second")
 });
 
 export default function EditQuestionPage() {
@@ -29,7 +32,7 @@ export default function EditQuestionPage() {
     });
 
     const questionQuery = useQuery('findQuestionById', async () => await ApiService.quizQueries.findQuestion(quiz_id, question_id), { enabled: router.isReady });
-    const updateMutation = useMutation(async data => await ApiService.quizQueries.updateQuestion(data.quizId, data.questionId, data.data))
+    const updateMutation = useMutation(async data => await ApiService.quizQueries.updateQuestion(data.quizId, data.questionId, data.data));
 
     useEffect(() => {
         if (questionQuery.isSuccess) {
@@ -40,11 +43,12 @@ export default function EditQuestionPage() {
                 answer3: questionQuery?.data?.data?.data?.answer3,
                 answer4: questionQuery?.data?.data?.data?.answer4,
                 correctAnswer: questionQuery?.data?.data?.data?.correctAnswer,
+                timer: questionQuery?.data?.data?.data?.timer
             });
         }
 
     }, [questionQuery.isSuccess, questionQuery?.data?.data?.data, reset]);
-    
+
     const onSubmit = async data => {
         Object.keys(data).forEach(key => {
             if (data[key] === '' || data[key] == null) {
@@ -52,11 +56,11 @@ export default function EditQuestionPage() {
             }
         });
 
-        await updateMutation.mutateAsync({quizId: quiz_id, questionId: question_id, data})
+        await updateMutation.mutateAsync({ quizId: quiz_id, questionId: question_id, data });
     };
 
     if (updateMutation.isSuccess) {
-        router.push(`/dashboard/quiz/${quiz_id}/edit`)
+        router.push(`/dashboard/quiz/${quiz_id}/edit`);
     }
     return (
         <StandardLayout>
@@ -118,6 +122,12 @@ export default function EditQuestionPage() {
                                     </RadioGroup>
                                 )}
                             />
+
+                            <FormControl id={`timer`} isInvalid={errors[`timer`]}>
+                                <FormLabel>Timer (second)</FormLabel>
+                                <Input placeholder="Time allotted to answer the question" type="number" {...register(`timer`)} />
+                                <FormErrorMessage >{errors[`timer`] && errors[`timer`].message}</FormErrorMessage>
+                            </FormControl>
 
                             <Button isDisabled={!router.isReady} isFullWidth colorScheme={"purple"} type={"submit"} onClick={handleSubmit((onSubmit))}>Update</Button>
                         </VStack>

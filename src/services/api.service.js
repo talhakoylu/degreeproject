@@ -56,8 +56,15 @@ const userQueries = {
     }
 };
 
+const gameQueries = {
+    createGame: async (quizId, data) => {
+        return await axios.post(globalConstants.api + '/game/create-game/' + quizId, data)
+    }
+}
+
 export const ApiService = {
     categoryQueries,
     quizQueries,
-    userQueries
+    userQueries,
+    gameQueries
 };

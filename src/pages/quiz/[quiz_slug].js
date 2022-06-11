@@ -143,7 +143,7 @@ export default function QuizDetailPage() {
 
                             <Image src={`http://localhost:8080/${data.coverImage}`} borderRadius={"md"} boxSize={"100%"} height={"180px"} objectFit={"fill"} alt="Quiz Cover Image" />
 
-                            <SidebarBox title={"Bir Oyun Oluştur"} description={"Bu sınava ait sorulardan oluşan bir oyun oluşturabilirsiniz."} buttonOnClick={() => router.push("/")} buttonText={"Oyun Oluştur"} icon={<VscDebugStart />} />
+                            <SidebarBox title={"Bir Oyun Oluştur"} description={"Bu sınava ait sorulardan oluşan bir oyun oluşturabilirsiniz."} buttonOnClick={() => router.push({pathname: "/quiz/create-game", query: {quiz_id: data._id}})} buttonText={"Oyun Oluştur"} icon={<VscDebugStart />} />
                             <SidebarBox title={"Bu Sınavı Bildir"} description={"Bu sınavın içeriğinden bağımsız olduğunu, kuralları ihlal ettiğini ve sistemde bulunmaması gerektiğini düşünüyorsan bunu bize bildirebilirsin."} buttonText={"Bildir!"} buttonIconBackgroundHover={"red.500"} buttonIconBackground={"red.300"} buttonOnClick={() => router.push("/")} icon={<VscReport />} />
                         </VStack>
                     </Stack>

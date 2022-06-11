@@ -19,7 +19,10 @@ const formSchema = yup.object().shape({
     answer2: yup.string()
         .required("Answer 2 is required."),
     correctAnswer: yup.string()
-        .required("Select a correct answer.")
+        .required("Select a correct answer."),
+    timer: yup.number()
+        .required("Timer is required.")
+        .min(10, "Minimum time could be at least 10 second")
 });
 
 export default function AddQuestionPage() {
@@ -38,7 +41,7 @@ export default function AddQuestionPage() {
             }
         });
         console.log(data);
-        addQuestionMutation.mutateAsync({quizId: routerQuery.quiz_id, data: data}).then(res => router.back());
+        addQuestionMutation.mutateAsync({ quizId: routerQuery.quiz_id, data: data }).then(res => router.back());
     };
     return (
         <StandardLayout>
@@ -102,6 +105,12 @@ export default function AddQuestionPage() {
                                 </RadioGroup>
                             )}
                         />
+
+                        <FormControl id={`timer`} isInvalid={errors[`timer`]}>
+                            <FormLabel>Timer (second)</FormLabel>
+                            <Input placeholder="Time allotted to answer the question" type="number" {...register(`timer`)} />
+                            <FormErrorMessage >{errors[`timer`] && errors[`timer`].message}</FormErrorMessage>
+                        </FormControl>
 
 
                         <Button isFullWidth colorScheme={"purple"} type={"submit"} onClick={handleSubmit((onSubmit))}>Save</Button>
