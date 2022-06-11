@@ -36,7 +36,7 @@ export default function JoinGamePage() {
                             <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
                         </FormControl>
 
-                        <Button type="subtmit" colorScheme={"orange"} onClick={handleSubmit(onSubmit)} isFullWidth>Join</Button>
+                        <Button type="submit" colorScheme={"orange"} onClick={handleSubmit(onSubmit)} isFullWidth>Join</Button>
                     </VStack>
                 </form>
 
