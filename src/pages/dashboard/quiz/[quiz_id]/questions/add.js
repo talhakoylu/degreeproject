@@ -1,14 +1,17 @@
 import DashboardArea from "@/components/DashboardArea";
 import StandardLayout from "@/components/layouts/StandardLayout";
 import CustomRichText from "@/components/RichText";
+import { ApiService } from "@/services/api.service";
 import { Box, Button, Checkbox, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Input, Radio, RadioGroup, Stack, Text, Textarea, VStack } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 import * as yup from "yup";
 
 const formSchema = yup.object().shape({
-    question: yup.string()
+    questionText: yup.string()
         .required("Question is required.")
         .min(30, "Question must be at least 30 characters!"),
     answer1: yup.string()
@@ -24,25 +27,29 @@ export default function AddQuestionPage() {
         resolver: yupResolver(formSchema)
     });
 
+    const router = useRouter();
+    const routerQuery = router?.query;
+    const addQuestionMutation = useMutation(async (data) => await ApiService.quizQueries.addQuestion(data.quizId, data.data));
 
     const onSubmit = data => {
         Object.keys(data).forEach(key => {
             if (data[key] === '' || data[key] == null) {
-              delete data[key];
+                delete data[key];
             }
-          });
-        console.log(data)
+        });
+        console.log(data);
+        addQuestionMutation.mutateAsync({quizId: routerQuery.quiz_id, data: data}).then(res => router.back());
     };
     return (
         <StandardLayout>
             <DashboardArea title={"Soru Ekle"} description={"Bu sayfadan sınavınız için soru ve cevaplar ekleyebilirsiniz."} showGoBackButton>
                 <form>
                     <VStack spacing={4} align={"stretch"}>
-                        <FormControl id={"question"} isInvalid={errors.question}>
+                        <FormControl id={"questionText"} isInvalid={errors.questionText}>
                             <FormLabel>Question</FormLabel>
                             <Controller
                                 control={control}
-                                name="question"
+                                name="questionText"
                                 render={({ field: { onChange, onBlur, value, ref } }) => (
                                     <CustomRichText
                                         onChange={onChange}
@@ -51,7 +58,7 @@ export default function AddQuestionPage() {
                                     />
                                 )}
                             />
-                            <FormErrorMessage>{errors.question && errors.question.message}</FormErrorMessage>
+                            <FormErrorMessage>{errors.questionText && errors.questionText.message}</FormErrorMessage>
                             <FormHelperText>
                                 Soru içeriğini bu alana girmelisiniz.
                             </FormHelperText>
@@ -82,7 +89,6 @@ export default function AddQuestionPage() {
                                                             }
                                                         }
                                                     })} />
-                                                    {console.log(errors[`answer${answerNumber}`])}
                                                     <FormErrorMessage >{errors[`answer${answerNumber}`] && errors[`answer${answerNumber}`].message}</FormErrorMessage>
                                                 </FormControl>
                                                 <FormControl id={`answerCorrectLabel${answerNumber}`} maxW={{ base: "100%", md: "40%" }} isInvalid={errors.correctAnswer}>

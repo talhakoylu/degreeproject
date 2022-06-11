@@ -86,47 +86,32 @@ const DashboardQuizEdit = () => {
   }
 
   useEffect(() => {
-    if (quizDetails.isSuccess) {
+    if (quizDetails.isSuccess && categoryList.isSuccess) {
       reset({
         title: quizDetails?.data?.data?.data?.title,
         category: quizDetails?.data?.data?.data?.category.categoryId,
         description: quizDetails?.data?.data?.data?.description
       });
     }
-  }, [quizDetails.isSuccess, quizDetails.data, reset]);
+
+  }, [quizDetails.isSuccess, categoryList.isSuccess, quizDetails.data, reset]);
 
   if (quizDetails.isError) {
     router.push('/dashboard/create-quiz');
   }
 
-  const data = React.useMemo(
-    () => [
-      {
-        id: 1,
-        question: 'Lorem ipsum dolor sit amet',
-        manage: {
-          edit: "/edit",
-          remove: "/"
-        }
-      },
-      {
-        id: 2,
-        question: 'Lorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit amet. Lorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit amet',
-        manage: {
-          edit: "/edit",
-          remove: "/"
-        }
-      },
-      {
-        id: 3,
-        question: 'Lorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit amet',
-        manage: {
-          edit: "/edit",
-          remove: "/"
-        }
-      },
-    ],
-    []
+  const data = React.useMemo(() => quizDetails?.data?.data?.data?.questions.map((item, index) => {
+    return {
+      id: index + 1,
+      question: item.questionText.replace(/<\/?[^>]+(>|$)/g, ""),
+      manage: {
+        edit: '/edit',
+        questionId: item._id,
+        remove: '/'
+      }
+    }
+  }),
+    [quizDetails?.data?.data?.data?.questions]
   );
 
   const columns = React.useMemo(
@@ -151,7 +136,7 @@ const DashboardQuizEdit = () => {
               {
                 cell.row.values.manage.edit &&
                 <IconButton colorScheme='purple' aria-label='Edit Content' icon={<MdOutlineModeEditOutline />}
-                  onClick={() => router.push(`/dashboard/quiz/${query?.quiz_id}/questions/${cell.row.values.id}/edit`)}
+                  onClick={() => router.push(`/dashboard/quiz/${query?.quiz_id}/questions/${cell.row.values.manage.questionId}/edit`)}
                 />
               }
               {cell.row.values.manage.remove &&
@@ -240,7 +225,7 @@ const DashboardQuizEdit = () => {
               {/* Add question tab */}
               <TabPanel px={0}>
                 <Button my={4} isFullWidth colorScheme={"blue"} onClick={() => router.push(`/dashboard/quiz/${query?.quiz_id}/questions/add`)}>Soru Ekle</Button>
-                <CustomTable mt={4} data={data} columns={columns} sx={{
+                <CustomTable mt={4} data={data ? data : []} columns={columns} sx={{
                   overflowX: "auto"
                 }} />
               </TabPanel>

@@ -28,10 +28,13 @@ const quizQueries = {
         return await axios.delete(globalConstants.api + '/quiz-admin/' + id);
     },
     updateQuiz: async (id, data) => {
-        return await axios.patch(globalConstants.api + '/quiz-admin/update-quiz/' + id, data)
+        return await axios.patch(globalConstants.api + '/quiz-admin/update-quiz/' + id, data);
     },
-    getQuizDetailById: async(id) => {
-        return await axios.get(globalConstants.api + '/quiz/' + id)
+    getQuizDetailById: async (id) => {
+        return await axios.get(globalConstants.api + '/quiz/' + id);
+    },
+    addQuestion: async(quizId, data) => {
+        return await axios.post(globalConstants.api + '/quiz-admin/add-question/' + quizId, data)
     }
 };
 
