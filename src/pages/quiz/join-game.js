@@ -7,6 +7,7 @@ import { keyframes } from '@emotion/react';
 import { useMutation, useQuery } from "react-query";
 import { ApiService } from "@/services/api.service";
 import { useState } from "react";
+import withAuth from "@/HOC/withAuth";
 
 const formSchema = yup.object().shape({
     gameKey: yup.string()
@@ -15,7 +16,7 @@ const formSchema = yup.object().shape({
         .max(8, 'Game Key must be 8 characters.')
 });
 
-export default function JoinGamePage() {
+const JoinGamePage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(formSchema)
     });
@@ -84,3 +85,5 @@ export default function JoinGamePage() {
         </FullScreenLayout >
     );
 }
+
+export default withAuth(JoinGamePage)

@@ -18,6 +18,9 @@ import Head from "next/head";
 import { useMutation } from "react-query";
 import { ApiService } from "@/services/api.service";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import { authValue } from "@/store/slices/auth";
+import { useEffect } from "react";
 
 const formSchema = yup.object().shape({
     firstName: yup.string()
@@ -72,6 +75,14 @@ export default function RegisterPage() {
         router.replace('/');
 
     }
+
+    const auth = useSelector(authValue);
+
+    useEffect(() => {
+        if (auth.isLoggedIn) {
+            router.replace('/')
+        }
+    }, [auth.isLoggedIn, router]);
 
     return (
         <FullScreenLayout>

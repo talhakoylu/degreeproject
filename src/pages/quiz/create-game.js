@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useMutation } from "react-query";
 import { ApiService } from "@/services/api.service";
+import withAuth from "@/HOC/withAuth";
 
 const formSchema = yup.object().shape({
     gameStart: yup.string()
@@ -24,7 +25,7 @@ const gradient = keyframes`
     100% {background-position: 0% 50%;},
 `;
 
-export default function CreateGamePage() {
+const CreateGamePage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(formSchema)
     });
@@ -83,3 +84,5 @@ export default function CreateGamePage() {
         </FullScreenLayout>
     );
 }
+
+export default withAuth(CreateGamePage)

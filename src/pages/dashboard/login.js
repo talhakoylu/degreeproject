@@ -48,7 +48,7 @@ const LoginPage = () => {
         if (auth.isLoggedIn) {
             router.replace('/')
         }
-    }, [auth.isLoggedIn]);
+    }, [auth.isLoggedIn, router]);
 
     return (
         <FullScreenLayout>
@@ -79,7 +79,7 @@ const LoginPage = () => {
 
                         <Button alignSelf={"end"} type={"submit"} onClick={handleSubmit((onSubmit))}
                             justifySelf={"center"} colorScheme='blue' rounded={"3xl"}>
-                            Submit
+                            Login
                         </Button>
                     </VStack>
                 </form>
