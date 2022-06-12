@@ -39,11 +39,11 @@ const quizQueries = {
     findQuestion: async (quizId, questionId) => {
         return await axios.get(globalConstants.api + '/quiz-admin/find-question/' + quizId + '/' + questionId);
     },
-    updateQuestion: async(quizId, questionId, data) => {
+    updateQuestion: async (quizId, questionId, data) => {
         return await axios.patch(globalConstants.api + '/quiz-admin/update-question/' + quizId + '/' + questionId, data);
     },
-    getAllQuizzesByCategorySlug: async (slug) =>  {
-        return await axios.get(globalConstants.api + '/quiz/get-quizzes-by-category-slug/' + slug)
+    getAllQuizzesByCategorySlug: async (slug) => {
+        return await axios.get(globalConstants.api + '/quiz/get-quizzes-by-category-slug/' + slug);
     }
 };
 
@@ -62,8 +62,11 @@ const gameQueries = {
     },
     findGameWithKey: async (gameKey) => {
         return await axios.get(globalConstants.api + '/game/find-game-with-key/' + gameKey);
+    },
+    joinGame: async (quizId, gameId) => {
+        return await axios.post(globalConstants.api + '/game/join-game/' + quizId + '/' + gameId);
     }
-}
+};
 
 export const ApiService = {
     categoryQueries,

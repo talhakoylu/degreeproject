@@ -19,7 +19,7 @@ export default function Header(){
                     }}>LOGO</ChakraLink>
                 </Link>
 
-                <SearchBar/>
+                {/* <SearchBar/> */}
 
                 <MemberArea/>
             </Stack>

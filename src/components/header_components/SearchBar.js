@@ -2,7 +2,7 @@ import {Button, Input, InputGroup} from "@chakra-ui/react";
 
 export default function SearchBar(){
     return(
-        <InputGroup width={{base: "100%", md: "50%"}}>
+        <InputGroup width={{base: "100%", md: "30%"}}>
             <Input variant='filled'
                    sx={{
                        bgColor: "specialColors.queen_blue.wOpacity04",

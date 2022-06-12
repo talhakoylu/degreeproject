@@ -20,14 +20,28 @@ const JoinGamePage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(formSchema)
     });
+    const [gameData, setGameData] = useState()
 
     // const [gameKey, setGameKey] = useState();
     const findGameMutation = useMutation(async (gameKey) => await ApiService.gameQueries.findGameWithKey(gameKey));
+    const joinToTheGameMutation = useMutation(async (data) => await ApiService.gameQueries.joinGame(data.quizId, data.gameId))
 
-    const onSubmit = async data => {
-        const lowerCaseGameKey = data.gameKey.toUpperCase();
-        await findGameMutation.mutateAsync(lowerCaseGameKey);
+    const onSubmitFindButton = async data => {
+        const upperCaseGameKey = data.gameKey.toUpperCase();
+        await findGameMutation.mutateAsync(upperCaseGameKey);
     };
+
+    if(findGameMutation.isSuccess){
+        console.log(findGameMutation.data.data)
+    }
+
+    const onSubmitJoinButton = async data => {
+        await joinToTheGameMutation.mutateAsync({quizId: data.quizId, gameId: data._id})
+    };
+
+    if(joinToTheGameMutation.isSuccess){
+        console.log(joinToTheGameMutation.data);
+    }
 
     return (
         <FullScreenLayout alignItems={"center"}>
@@ -41,7 +55,7 @@ const JoinGamePage = () => {
                             <FormErrorMessage>{errors.gameKey && errors.gameKey.message}</FormErrorMessage>
                         </FormControl>
 
-                        <Button type="submit" colorScheme={"orange"} onClick={handleSubmit(onSubmit)} isFullWidth>Find the Game</Button>
+                        <Button type="submit" colorScheme={"orange"} onClick={handleSubmit(onSubmitFindButton)} isFullWidth>Find the Game</Button>
                     </VStack>
                 </form>
             </Box>
@@ -64,13 +78,12 @@ const JoinGamePage = () => {
                                 {console.log(findGameMutation.data.data.data)}
                                 {findGameMutation.data.data.data.map((item, key) => {
                                     const isQuizAccessible = (new Date(item.gameEnd).getTime() > new Date().getTime())
-                                    console.log(isQuizAccessible);
                                     return (
                                         <Tr key={key}>
                                             <Td>{item.quizTitle}</Td>
                                             <Td textColor={isQuizAccessible ? 'black' : 'red'}>{new Date(item.gameEnd).toLocaleString()}</Td>
                                             <Td>
-                                                <Button isDisabled={!isQuizAccessible} colorScheme={'whatsapp'}>Join</Button>
+                                                <Button isDisabled={!isQuizAccessible} onClick={() => onSubmitJoinButton(item)} isLoading={joinToTheGameMutation.isLoading} colorScheme={'whatsapp'}>Join</Button>
                                             </Td>
                                         </Tr>
                                     );
