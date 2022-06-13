@@ -57,7 +57,6 @@ const ChangePasswordPage = ()=>{
     const onSubmit = data => {
         data.confirmPassword = undefined;
         const result = mutation.mutateAsync(data);
-        console.log(result);
     };
 
     if (mutation.isSuccess) {

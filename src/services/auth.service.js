@@ -63,14 +63,12 @@ export function useLoginService() {
 
 
 async function setAuthUser({ dispatch, result }) {
-  console.log('setStoreAuthlaniyor');
   dispatch(
     setStoreAuth({
       user: result.data.data,
       isLoggedIn: true,
     }),
   );
-  console.log('setStoreAuthlamisiz');
 }
 
 export function useMeService() {

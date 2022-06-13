@@ -40,7 +40,6 @@ export default function AddQuestionPage() {
                 delete data[key];
             }
         });
-        console.log(data);
         addQuestionMutation.mutateAsync({ quizId: routerQuery.quiz_id, data: data }).then(res => router.back());
     };
     return (

@@ -34,10 +34,6 @@ const CreateQuiz = () => {
 
     const removeQuiz = useMutation(async id => await ApiService.quizQueries.removeQuiz(id));
 
-    if (isSuccess) {
-        console.log(data2.data.data);
-    }
-
     const data = React.useMemo(() => data2?.data?.data?.map((item, index) => {
         return {
             col1: item.title,

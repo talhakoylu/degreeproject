@@ -13,8 +13,6 @@ import ContainerArea from '@/components/ContainerArea';
 const Area = () => {
     const categories = useQuery("allCategories", async () => await ApiService.categoryQueries.getAllCategories().then(response => response.data.data));
     const quizzes = useQuery("allQuizzes", async () => await ApiService.quizQueries.getAllQuizzes().then(response => response.data.data));
-    console.log("categories", categories.data);
-    console.log("quizzes", quizzes.data);
 
     if (quizzes.isLoading && categories.isLoading) {
         return (
@@ -50,38 +48,6 @@ const Area = () => {
 };
 
 export default function Home() {
-    // const categories = useQuery("allCategories", async () => await ApiService.categoryQueries.getAllCategories().then(response => response.data.data));
-    // const quizzes = useQuery("allQuizzes", async () => await ApiService.quizQueries.getAllQuizzes().then(response => response.data.data));
-    // console.log("categories", categories.data);
-    // console.log("quizzes", quizzes.data);
-
-    // if (quizzes.isLoading) {
-    //     return (
-    //         <ContainerArea
-    //             title={"En Son Eklenenler"}
-    //             mb={4}
-    //         >
-    //             <Alert status='info'>
-    //                 <AlertIcon />
-    //                 Yükleniyor
-    //             </Alert>
-    //         </ContainerArea>
-    //     );
-    // }
-
-    // if (quizzes.isError) {
-    //     return (
-    //         <ContainerArea
-    //             title={"En Son Eklenenler"}
-    //             mb={4}
-    //         >
-    //             <Alert status='danger'>
-    //                 <AlertIcon />
-    //                 Veriler getirilirken bir sorun oluştu.
-    //             </Alert>
-    //         </ContainerArea>
-    //     );
-    // }
 
     return (
         <>

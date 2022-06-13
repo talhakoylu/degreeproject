@@ -11,7 +11,6 @@ const withAuth = (WrappedComponent) => {
 
     useEffect(() => {
       if (auth.isReady) {
-        console.log('authIsReadyOkey fakat isLoggedIn', auth)
         if (auth.isLoggedIn === false) {
           Router.replace('/dashboard/login');
         } else {

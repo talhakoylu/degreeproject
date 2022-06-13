@@ -20,27 +20,28 @@ const JoinGamePage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(formSchema)
     });
-    const [gameData, setGameData] = useState()
+    const [gameData, setGameData] = useState();
 
     // const [gameKey, setGameKey] = useState();
     const findGameMutation = useMutation(async (gameKey) => await ApiService.gameQueries.findGameWithKey(gameKey));
-    const joinToTheGameMutation = useMutation(async (data) => await ApiService.gameQueries.joinGame(data.quizId, data.gameId))
+    const joinToTheGameMutation = useMutation(async (data) => await ApiService.gameQueries.joinGame(data.quizId, data.gameId));
 
     const onSubmitFindButton = async data => {
         const upperCaseGameKey = data.gameKey.toUpperCase();
         await findGameMutation.mutateAsync(upperCaseGameKey);
     };
 
-    if(findGameMutation.isSuccess){
-        console.log(findGameMutation.data.data)
-    }
-
     const onSubmitJoinButton = async data => {
-        await joinToTheGameMutation.mutateAsync({quizId: data.quizId, gameId: data._id})
+        await joinToTheGameMutation.mutateAsync({ quizId: data.quizId, gameId: data._id });
     };
 
-    if(joinToTheGameMutation.isSuccess){
-        console.log(joinToTheGameMutation.data);
+    if (joinToTheGameMutation.isSuccess) {
+        const data = joinToTheGameMutation.data.data.data;
+        localStorage.setItem('gameData', JSON.stringify({
+            quizId: data.gameResult.quizId,
+            gameId: data.gameResult.gameId,
+            resultId: data.gameResult._id,
+        }));
     }
 
     return (
@@ -75,9 +76,8 @@ const JoinGamePage = () => {
                             </Tr>
                         </Thead>
                             {findGameMutation.isSuccess && <Tbody>
-                                {console.log(findGameMutation.data.data.data)}
                                 {findGameMutation.data.data.data.map((item, key) => {
-                                    const isQuizAccessible = (new Date(item.gameEnd).getTime() > new Date().getTime())
+                                    const isQuizAccessible = (new Date(item.gameEnd).getTime() > new Date().getTime());
                                     return (
                                         <Tr key={key}>
                                             <Td>{item.quizTitle}</Td>
@@ -90,13 +90,13 @@ const JoinGamePage = () => {
                                 })}
 
                             </Tbody>}
-                            </>
+                        </>
                     </Table>
                 </TableContainer>
             </Box>
 
         </FullScreenLayout >
     );
-}
+};
 
-export default withAuth(JoinGamePage)
+export default withAuth(JoinGamePage);
