@@ -65,7 +65,10 @@ const gameQueries = {
     },
     joinGame: async (quizId, gameId) => {
         return await axios.post(globalConstants.api + '/game/join-game/' + quizId + '/' + gameId);
-    }
+    },
+    getQuestions: async (quizId) => {
+        return await axios.get(globalConstants.api + '/game/get-questions/' + quizId)
+    } 
 };
 
 export const ApiService = {
