@@ -72,7 +72,7 @@ export default function RegisterPage() {
     };
 
     if (mutation.isSuccess) {
-        router.replace('/');
+        router.replace('/dashboard/login');
 
     }
 

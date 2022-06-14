@@ -1,5 +1,5 @@
 import StandardLayout from "../../components/layouts/StandardLayout";
-import { MdCheck, MdOutlineAdd, MdOutlineVpnKey, MdSettings } from "react-icons/md";
+import { MdCheck, MdOutlineAdd, MdOutlineVpnKey, MdSettings, MdRestorePage } from "react-icons/md";
 import ContainerArea from "../../components/ContainerArea";
 import { Avatar, Box, Button, Icon, SimpleGrid } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -39,6 +39,15 @@ export const links = [
         pathUrl: "/dashboard/create-quiz",
         icon: MdOutlineAdd,
         boxColor: "orange",
+        description: "açıklama",
+        exact: true,
+        adminOnly: true
+    },
+    {
+        pathName: "Created Games",
+        pathUrl: "/dashboard/created-games",
+        icon: MdRestorePage,
+        boxColor: "green",
         description: "açıklama",
         exact: true,
         adminOnly: true

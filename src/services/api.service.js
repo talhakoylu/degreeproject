@@ -68,6 +68,12 @@ const gameQueries = {
     },
     getQuestions: async (quizId) => {
         return await axios.get(globalConstants.api + '/game/get-questions/' + quizId);
+    },
+    getAllGamesByUser: async () => {
+        return await axios.get(globalConstants.api + '/game/get-all-games-by-user');
+    },
+    getGameDetailsById: async (gameId) => {
+        return await axios.get(globalConstants.api + '/game/get-game-details-by-id/' + gameId)
     }
 };
 
@@ -80,6 +86,9 @@ const resultQueries = {
     },
     getQuizResultByIdBelongsUser: async (resultId) => {
         return await axios.get(globalConstants.api + '/quiz-result/get-quiz-result-by-id-belongs-user/' + resultId)
+    },
+    getQuizResultByGameAndUserId: async (gameId, userId) => {
+        return await axios.get(globalConstants.api + '/quiz-result/get-quiz-result-by-game-and-user-id/' + gameId + '/' + userId)
     }
 };
 
