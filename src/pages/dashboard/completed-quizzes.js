@@ -39,7 +39,7 @@ const CompletedQuizzes = () => {
                 width: 45
             },
             {
-                Header: `Correct / Total`,
+                Header: `Correct / Solved / Total Question Count`,
                 accessor: 'result',
                 width: 20
 
