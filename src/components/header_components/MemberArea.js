@@ -32,7 +32,7 @@ export default function MemberArea() {
                 </HStack>
                 :
                 <HStack spacing={4}>
-                    <Button leftIcon={<SiGamejolt />} onClick={() => router.push("/quiz/join-game")} colorScheme='yellow' variant='solid'>
+                    <Button leftIcon={<SiGamejolt />} onClick={() => router.push("/quiz/game/join-game")} colorScheme='yellow' variant='solid'>
                         Join a Game
                     </Button>
                     <Button leftIcon={<MdBuild />} onClick={() => router.push("/dashboard")} colorScheme='pink' variant='solid'>

@@ -71,9 +71,17 @@ const gameQueries = {
     } 
 };
 
+const resultQueries = {
+    submitAnswer: async (resultId, data) => {
+        console.log("api", data);
+        return await axios.post(globalConstants.api + '/quiz-result/add-answer-result/' + resultId, data)
+    }
+}
+
 export const ApiService = {
     categoryQueries,
     quizQueries,
     userQueries,
-    gameQueries
+    gameQueries,
+    resultQueries
 };
