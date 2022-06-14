@@ -31,7 +31,7 @@ export default function DashboardArea({ title, description, children, showGoBack
                         borderColor={"lightgrey"}
                         rounded={"md"} p={4}>
                         <Avatar bg='blue.100' icon={<MdManageAccounts fontSize='4.5rem' />} size={"2xl"} />
-                        <Text>Name Surname </Text>
+                        {auth?.isReady && <> <Text>Merhaba,</Text> <Text fontWeight={"bold"}>{auth.user.fullName}</Text></>}
 
                         <NavLink href={"/dashboard"} exact={true} pathName={"Dashboard Home Page"} icon={MdHome} />
                         {links.map((item, index) => {

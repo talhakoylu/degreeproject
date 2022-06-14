@@ -28,7 +28,7 @@ const Area = () => {
     if (quizzes.isError && categories.isError) {
         return (
             <ContainerArea>
-                <Alert status='danger'>
+                <Alert status='error'>
                     <AlertIcon />
                     Veriler getirilirken bir sorun oluştu.
                 </Alert>

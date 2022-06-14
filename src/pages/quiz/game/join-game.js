@@ -8,6 +8,7 @@ import { useMutation, useQuery } from "react-query";
 import { ApiService } from "@/services/api.service";
 import { useState } from "react";
 import withAuth from "@/HOC/withAuth";
+import { useRouter } from "next/router";
 
 const formSchema = yup.object().shape({
     gameKey: yup.string()
@@ -21,8 +22,8 @@ const JoinGamePage = () => {
         resolver: yupResolver(formSchema)
     });
     const [gameData, setGameData] = useState();
+    const router = useRouter();
 
-    // const [gameKey, setGameKey] = useState();
     const findGameMutation = useMutation(async (gameKey) => await ApiService.gameQueries.findGameWithKey(gameKey));
     const joinToTheGameMutation = useMutation(async (data) => await ApiService.gameQueries.joinGame(data.quizId, data.gameId));
 
@@ -42,6 +43,8 @@ const JoinGamePage = () => {
             gameId: data.gameResult.gameId,
             resultId: data.gameResult._id,
         }));
+
+        router.push('/quiz/game/game-quiz')
     }
 
     return (
@@ -71,19 +74,22 @@ const JoinGamePage = () => {
                         <><Thead>
                             <Tr>
                                 <Th>Quiz Title</Th>
-                                <Th>Last Accessible Time</Th>
+                                <Th>Start Date</Th>
+                                <Th>Last Accessible Date</Th>
                                 <Th>Action</Th>
                             </Tr>
                         </Thead>
                             {findGameMutation.isSuccess && <Tbody>
                                 {findGameMutation.data.data.data.map((item, key) => {
-                                    const isQuizAccessible = (new Date(item.gameEnd).getTime() > new Date().getTime());
+                                    const isQuizAccessibleForLast = (new Date(item.gameEnd).getTime() > new Date().getTime());
+                                    const isQuizAccessibleForBegin = (new Date(item.gameStart).getTime() < new Date().getTime());
                                     return (
                                         <Tr key={key}>
                                             <Td>{item.quizTitle}</Td>
-                                            <Td textColor={isQuizAccessible ? 'black' : 'red'}>{new Date(item.gameEnd).toLocaleString()}</Td>
+                                            <Td textColor={isQuizAccessibleForBegin ? 'black' : 'red'}>{new Date(item.gameStart).toLocaleString()}</Td>
+                                            <Td textColor={isQuizAccessibleForLast ? 'black' : 'red'}>{new Date(item.gameEnd).toLocaleString()}</Td>
                                             <Td>
-                                                <Button isDisabled={!isQuizAccessible} onClick={() => onSubmitJoinButton(item)} isLoading={joinToTheGameMutation.isLoading} colorScheme={'whatsapp'}>Join</Button>
+                                                <Button isDisabled={(!isQuizAccessibleForBegin || !isQuizAccessibleForLast) } onClick={() => onSubmitJoinButton(item)} isLoading={joinToTheGameMutation.isLoading} colorScheme={'whatsapp'}>Join</Button>
                                             </Td>
                                         </Tr>
                                     );

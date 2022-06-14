@@ -102,7 +102,10 @@ const QuizCreatePage = () => {
                         <VStack spacing={2} align={"stretch"}>
                             <SimpleGrid columns={1} spacing={6}>
 
-
+                                <Alert status="warning">
+                                    <AlertIcon />
+                                    Eklemek üzere olduğunuz bu sınav, sınav içeriğine en az 2 soru eklenmeden ana sayfada listelenmez. Ekleme işleminden sonra soru oluşturmayı unutmayınız.
+                                </Alert>
 
                                 <FormControl id={"title"} isInvalid={errors.title}>
                                     <FormLabel>Quiz Title</FormLabel>

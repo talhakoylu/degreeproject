@@ -175,7 +175,7 @@ export default function RegisterPage() {
 
                         </SimpleGrid>
 
-                        <Button alignSelf={"end"} type={"submit"} onClick={handleSubmit((onSubmit))}
+                        <Button alignSelf={"end"} type={"submit"} isLoading={mutation.isLoading} onClick={handleSubmit((onSubmit))}
                             justifySelf={"center"} colorScheme='green' rounded={"3xl"}>
                             Sign Up
                         </Button>

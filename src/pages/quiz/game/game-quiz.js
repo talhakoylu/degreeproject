@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 const GameQuizPage = () => {
     const router = useRouter();
     const [gameData, setGameData] = useState();
+    const [resultId, setResultId] = useState();
     const [questionData, setQuestionData] = useState();
     const [currentQuestionNumber, setCurrentQuestionNumber] = useState();
     const [isQuizFinished, setIsQuizFinished] = useState(false);
@@ -26,11 +27,15 @@ const GameQuizPage = () => {
     const submitAnswerMutation = useMutation(async (data) => await ApiService.resultQueries.submitAnswer(data.resultId, data.data));
 
     useEffect(() => {
-        console.log(currentQuestionNumber);
         if (getQuestionsQuery.isSuccess) {
             setQuestionData(getQuestionsQuery.data.data.data[currentQuestionNumber]);
             if (currentQuestionNumber > getQuestionsQuery.data.data.data.length - 1) {
                 setIsQuizFinished(true);
+                setResultId(gameData.resultId)
+                localStorage.removeItem('gameData');
+                localStorage.removeItem('currentQuestionNumber');
+                setGameData(undefined);
+                setQuestionData(undefined);
             }
         }
     }, [getQuestionsQuery.isSuccess, currentQuestionNumber]);
@@ -40,7 +45,6 @@ const GameQuizPage = () => {
         answer.selectedAnswer = selectedAnswer === "-" ? "" : selectedAnswer;
         answer.questionId = answer._id;
         delete answer._id;
-        console.log(answer);
         await submitAnswerMutation.mutateAsync({ resultId: gameData.resultId, data: answer });
     };
 
@@ -56,11 +60,16 @@ const GameQuizPage = () => {
 
 
     const onSubmitFinish = () => {
+        setResultId(gameData.resultId)
         localStorage.removeItem('gameData');
         localStorage.removeItem('currentQuestionNumber');
         setGameData(undefined);
         setQuestionData(undefined);
         setIsFinishButtonClicked(true);
+    };
+
+    const onSubmitResultPage = () => {
+        router.replace(`/dashboard/quiz-result/${resultId}/details`);
     };
 
     return (
@@ -117,16 +126,16 @@ const GameQuizPage = () => {
 
                 {isQuizFinished && <VStack p={5}>
                     <Text>Sınav başarıyla tamamlandı. Sonucunuzu görmek için aşağıdaki butona basabilirsiniz.</Text>
-                    <Button colorScheme={"blue"}>Sınav Sonucum</Button>
+                    <Button colorScheme={"blue"} onClick={onSubmitResultPage}>Sınav Sonucum</Button>
                 </VStack>}
 
                 {
                     (!gameData && isFinishButtonClicked) ?
-                        <VStack>
+                        <VStack py={5}>
                             <Text>Sınav başarıyla sonlandırıldı. Sonucunuzu görmek için aşağıdaki butona basabilirsiniz.</Text>
-                            <Button colorScheme={"blue"}>Sınav Sonucum</Button>
+                            <Button colorScheme={"blue"} onClick={onSubmitResultPage}>Sınav Sonucum</Button>
                         </VStack> :
-                        !gameData ?
+                        !gameData && !isQuizFinished ?
                             <Text textAlign={"center"} p={4}>Bu sayfayı direkt giriş yaparak görüntüleyemezsiniz.</Text>
                             : null
                 }
@@ -136,4 +145,4 @@ const GameQuizPage = () => {
     );
 };
 
-export default GameQuizPage;
+export default withAuth(GameQuizPage);

@@ -67,16 +67,21 @@ const gameQueries = {
         return await axios.post(globalConstants.api + '/game/join-game/' + quizId + '/' + gameId);
     },
     getQuestions: async (quizId) => {
-        return await axios.get(globalConstants.api + '/game/get-questions/' + quizId)
-    } 
+        return await axios.get(globalConstants.api + '/game/get-questions/' + quizId);
+    }
 };
 
 const resultQueries = {
     submitAnswer: async (resultId, data) => {
-        console.log("api", data);
-        return await axios.post(globalConstants.api + '/quiz-result/add-answer-result/' + resultId, data)
+        return await axios.post(globalConstants.api + '/quiz-result/add-answer-result/' + resultId, data);
+    },
+    getAllResultsByUser: async () => {
+        return await axios.get(globalConstants.api + '/quiz-result/find-all-results-by-user-id');
+    },
+    getQuizResultByIdBelongsUser: async (resultId) => {
+        return await axios.get(globalConstants.api + '/quiz-result/get-quiz-result-by-id-belongs-user/' + resultId)
     }
-}
+};
 
 export const ApiService = {
     categoryQueries,

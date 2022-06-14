@@ -109,7 +109,7 @@ const DashboardQuizEdit = () => {
         questionId: item._id,
         remove: '/'
       }
-    }
+    };
   }),
     [quizDetails?.data?.data?.data?.questions]
   );
@@ -155,6 +155,12 @@ const DashboardQuizEdit = () => {
 
         {auth?.isReady && auth?.user?.isAdmin ?
           <Tabs variant='enclosed'>
+
+            {(quizDetails.isSuccess && quizDetails.data.data.data.questions.length < 2) && <Alert my={3} status="warning">
+              <AlertIcon />
+              <p>Sınavınınızın ana sayfada listelenmesi için eklenmesi gereken minimum soru adedi: <strong> 2</strong>. Eklenmiş soru adedi: {quizDetails.data.data.data.questions.length}</p>
+            </Alert>}
+
             <TabList>
               <Tab>Quiz İçeriği</Tab>
               <Tab>Sorular & Soru Ekleme</Tab>

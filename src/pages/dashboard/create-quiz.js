@@ -38,6 +38,7 @@ const CreateQuiz = () => {
         return {
             col1: item.title,
             col2: item.category.title,
+            questionCount: item.questions.length,
             createdAt: new Date(item.createdAt).toUTCString(),
             manage: {
                 itemId: item._id,
@@ -57,9 +58,14 @@ const CreateQuiz = () => {
                 width: 35
             },
             {
+                Header: "Question Count",
+                accessor: "questionCount",
+                width: 10
+            },
+            {
                 Header: 'Category',
                 accessor: 'col2',
-                width: 30
+                width: 20
             },
             {
                 Header: "Created At",

@@ -28,11 +28,7 @@ const formSchema = yup.object().shape({
 
 const LoginPage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({
-        resolver: yupResolver(formSchema),
-        defaultValues: {
-            email: "talhakoylu0@gmail.com",
-            password: "Talha_1998"
-        }
+        resolver: yupResolver(formSchema)
     });
 
     const auth = useSelector(authValue);
