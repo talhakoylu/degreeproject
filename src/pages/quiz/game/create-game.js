@@ -10,6 +10,8 @@ import { useRouter } from "next/router";
 import { useMutation } from "react-query";
 import { ApiService } from "@/services/api.service";
 import withAuth from "@/HOC/withAuth";
+import { useSelector } from "react-redux";
+import { authValue } from "@/store/slices/auth";
 
 const formSchema = yup.object().shape({
     gameStart: yup.string()
@@ -29,15 +31,27 @@ const CreateGamePage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(formSchema)
     });
-    const [gameKey, setGameKey] = useState({gameKey: 'The key will appear here', gameKeyGenerated: false})
+    const [isAdmin, setIsAdmin] = useState(false);
+    const auth = useSelector(authValue);
+    const [gameKey, setGameKey] = useState({ gameKey: 'The key will appear here', gameKeyGenerated: false });
     const router = useRouter();
-    const createGameMutation = useMutation(async data => await ApiService.gameQueries.createGame(data.quizId, data.data))
+    const createGameMutation = useMutation(async data => await ApiService.gameQueries.createGame(data.quizId, data.data));
 
     const onSubmit = async data => {
-        if(router.isReady){
-            await createGameMutation.mutateAsync({quizId: router.query.quiz_id, data}).then(res => setGameKey({gameKey: res.data.data.uniqueGameKey, gameKeyGenerated: true}))
+        if (router.isReady) {
+            await createGameMutation.mutateAsync({ quizId: router.query.quiz_id, data }).then(res => setGameKey({ gameKey: res.data.data.uniqueGameKey, gameKeyGenerated: true }));
         }
     };
+
+    useEffect(()=>{
+        if(auth.isReady){
+            if(auth.user.isAdmin){
+                setIsAdmin(true)
+            }else{
+                setIsAdmin(false)
+            }
+        }
+    }, [auth?.isReady, auth?.user?.isAdmin])
 
     return (
         <FullScreenLayout backgroundColor={"gray.700"} justifyContent={"flex-start"} alignItems={"center"}>
@@ -62,7 +76,10 @@ const CreateGamePage = () => {
                             </SimpleGrid>
                         </VStack>
                         <HStack align={"center"} justify={"center"} marginTop={4} paddingY={6}>
-                            <Button position={{ md: "absolute" }} type="submit" colorScheme={"orange"} rounded={"md"} marginTop={6} paddingX={6} paddingY={6} onClick={handleSubmit(onSubmit)} isDisabled={gameKey.gameKeyGenerated}>Genarate the Game Key</Button>
+                            {!isAdmin ?
+                                <Button position={{ md: "absolute" }} type="submit" colorScheme={"orange"} rounded={"md"} marginTop={6} paddingX={6} paddingY={6} isDisabled={true}>You do not have the permission to create a game</Button> :
+                                <Button position={{ md: "absolute" }} type="submit" colorScheme={"orange"} rounded={"md"} marginTop={6} paddingX={6} paddingY={6} onClick={handleSubmit(onSubmit)} isDisabled={gameKey.gameKeyGenerated}>Genarate the Game Key</Button>
+                                }
                         </HStack>
                     </Box>
                 </form>
@@ -78,11 +95,10 @@ const CreateGamePage = () => {
                         borderRadius: "md",
                     }} px={8} py={4}>{gameKey.gameKey}</Box>
                 </VStack>
-                <VStack>
-                </VStack>
+
             </VStack>
         </FullScreenLayout>
     );
-}
+};
 
-export default withAuth(CreateGamePage)
+export default withAuth(CreateGamePage);
