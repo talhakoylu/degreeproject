@@ -4,7 +4,26 @@ import axios from 'axios';
 const categoryQueries = {
     getAllCategories: async () => {
         return await axios.get(globalConstants.api + "/category/get-all-categories");
-    }
+    },
+    removeCategory: async (id) => {
+        return await axios.delete(globalConstants.api + '/category-admin/remove-category-by-id/' + id);
+    },
+    createCategory: async (data) => {
+        return await axios.post(globalConstants.api + '/category-admin/add', data);
+    },
+    addCoverImage: async (data, id) => {
+        return await axios.patch(globalConstants.api + '/category-admin/update/' + id, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        });
+    },
+    getCategoryDetails: async (id) => {
+        return await axios.get(globalConstants.api + '/category/get-category-by-id/' + id)
+    },
+    updateCategory: async (id, data) => {
+        return await axios.patch(globalConstants.api + '/category-admin/update/' + id, data);
+    },
 };
 
 const quizQueries = {

@@ -52,6 +52,15 @@ export const links = [
         exact: true,
         adminOnly: true
     },
+    {
+        pathName: "Category Management",
+        pathUrl: "/dashboard/manage-categories",
+        icon: MdOutlineAdd,
+        boxColor: "yellow",
+        description: "açıklama",
+        exact: true,
+        adminOnly: true
+    },
 ];
 
 
