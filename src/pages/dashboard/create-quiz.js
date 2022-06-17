@@ -23,12 +23,13 @@ import { useSelector } from "react-redux";
 import { authValue } from "@/store/slices/auth";
 import { useMutation, useQuery } from "react-query";
 import { ApiService } from "@/services/api.service";
+import { DeleteAction } from "@/components/Actions";
 
 
 const CreateQuiz = () => {
     const auth = useSelector(authValue);
     const router = useRouter();
-    const { data: data2, isSuccess, isError } = useQuery('createdQuizzesByUser', async () => {
+    const { data: data2, isSuccess, isError, refetch } = useQuery('createdQuizzesByUser', async () => {
         return await ApiService.quizQueries.getAllQuizzesByUserId();
     }, { enabled: (auth?.isReady && auth?.user?.isAdmin) });
 
@@ -86,7 +87,10 @@ const CreateQuiz = () => {
                                 />
                             }
                             {cell.row.values.manage.remove &&
-                                <IconButton colorScheme='red' aria-label='Remove ' icon={<MdOutlineDeleteForever />} />}
+                                <DeleteAction onDelete={async () => {
+                                    await removeQuiz.mutateAsync(cell.row.values.manage.itemId);
+                                    refetch();
+                                }}><IconButton colorScheme='red' aria-label='Remove ' icon={<MdOutlineDeleteForever />} /></DeleteAction>}
                         </HStack>
                         : null)
                 )
