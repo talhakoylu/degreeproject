@@ -46,6 +46,9 @@ const quizQueries = {
     removeQuiz: async (id) => {
         return await axios.delete(globalConstants.api + '/quiz-admin/' + id);
     },
+    removeQuestion: async (quizId, questionId) => {
+        return await axios.delete(globalConstants.api + '/quiz-admin/question/' + quizId + '/' + questionId);
+    },
     updateQuiz: async (id, data) => {
         return await axios.patch(globalConstants.api + '/quiz-admin/update-quiz/' + id, data);
     },

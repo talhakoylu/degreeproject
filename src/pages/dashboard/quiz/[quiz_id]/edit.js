@@ -18,6 +18,7 @@ import { useMutation, useQuery } from "react-query";
 import { ApiService } from "@/services/api.service";
 import { authValue } from "@/store/slices/auth";
 import { useSelector } from 'react-redux';
+import { DeleteAction } from "@/components/Actions";
 
 const formSchema = yup.object().shape({
   title: yup.string()
@@ -53,6 +54,8 @@ const DashboardQuizEdit = () => {
   const imageMutation = useMutation(async (data) => {
     return await ApiService.quizQueries.addCoverImage(data.file, data.id);
   });
+
+  const removeQuestion = useMutation(async data => await ApiService.quizQueries.removeQuestion(data.quizId, data.questionId));
 
   const onSubmit = async submitData => {
     if (categoryList.isSuccess && quizDetails.isSuccess) {
@@ -140,7 +143,10 @@ const DashboardQuizEdit = () => {
                 />
               }
               {cell.row.values.manage.remove &&
-                <IconButton colorScheme='red' aria-label='Remove ' icon={<MdOutlineDeleteForever />} />}
+                <DeleteAction onDelete={async () => {
+                  await removeQuestion.mutateAsync({quizId: query.quiz_id, questionId: cell.row.values.manage.questionId});
+                  quizDetails.refetch();
+              }}><IconButton colorScheme='red' aria-label='Remove ' icon={<MdOutlineDeleteForever />} /></DeleteAction>}
             </HStack>
             : null)
         )
